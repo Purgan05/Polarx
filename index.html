@@ -1,0 +1,1984 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Mayorista Vapes, Envíos a todo México. Los mejores precios en vapes al mayoreo.">
+    <title>Waka Vapes|Mayoristas Vapes </title>
+    <!-- redeploy -->
+    
+    <!-- Favicon (Logo en la pestaña del navegador) -->
+    <link rel="icon" type="image/png" href="img/iconos/wakavapes_icono.webp">
+    <link rel="shortcut icon" type="image/png" href="img/iconos/wakavapes_icono.webp">
+    <link rel="apple-touch-icon" href="img/iconos/wakavapes_icono.webp">
+    
+    <!-- Seguridad HTTPS -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <!-- Nota: X-Content-Type-Options y X-Frame-Options deben venir desde el servidor como cabeceras HTTP, no via <meta>. -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- Preconnect para conexiones tempranas a servidores externos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com">
+    
+    <!-- Preload recursos críticos para LCP -->
+    <link rel="preload" href="style.css?v=2" as="style">
+    <link rel="preload" href="img/iconos/wakalogo.webp" as="image" type="image/webp">
+    
+    <!-- CSS crítico inline para primer render (evita FOUC) -->
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:#1f1f1f;color:#f0f0f0;padding-top:90px;overflow-x:hidden;min-height:100vh}
+        .landing-container{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        .landing-logo{width:clamp(80px,18vw,140px);height:auto}
+    </style>
+    
+    <!-- Vinculación de Estilos -->
+    <link rel="stylesheet" href="style.css?v=2">
+    
+    <!-- Fuentes de Google con carga no bloqueante -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet"></noscript>
+    <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
+</head>
+<body>
+
+    <!-- =========================================
+         0. COMPONENTES FLOTANTES
+         ========================================= -->
+    
+    <!-- Botón Volver Arriba -->
+    <button id="btn-back-to-top" class="btn-floating-top" onclick="irArriba()" title="Subir" aria-label="Volver arriba">
+        <i class="ph ph-arrow-up"></i>
+    </button>
+
+    <!-- Notificación Toast
+         USABLE: Cambia el texto por defecto si quieres, pero muestra mensajes
+         dinámicos con la función `mostrarToast(mensaje)` en JS. Se oculta por
+         defecto y usa la clase `show` para mostrarse. -->
+    <div id="toast-notification" class="toast" role="status" aria-live="polite" style="display:none;">
+        <div class="toast-content">
+            <i class="ph ph-check-circle-fill"></i>
+            <span id="toast-message">Acción realizada correctamente</span>
+        </div>
+    </div>
+
+    <!-- Confirmación de éxito (alerta animada con flecha verde) -->
+    <div id="success-alert" class="success-alert" aria-hidden="true">
+        <div class="success-card">
+            <div class="success-icon"><i class="ph ph-arrow-up-right"></i></div>
+            <div class="success-text" id="success-text">Agregado exitosamente</div>
+        </div>
+    </div>
+
+    <!-- Alerta Personalizada (CORREGIDA: Oculta por defecto) -->
+    <div id="custom-alert" class="custom-alert-overlay" style="display: none;">
+        <div class="custom-alert-box">
+            <div class="alert-icon"><i class="ph ph-warning-circle"></i></div>
+            <h3 id="alert-title">Atención</h3>
+            <p id="alert-message">Mensaje...</p>
+            <button class="btn-alert" onclick="cerrarAlerta()">ENTENDIDO</button>
+        </div>
+    </div>
+
+    <!-- =========================================
+         1. TOP TICKER
+         ========================================= -->
+    <div class="top-ticker">
+        <div class="ticker-wrapper">
+            <button class="ticker-control" onclick="cambiarMensaje(-1)"><i class="ph ph-caret-left"></i></button>
+            <div class="ticker-text" id="ticker-display" onclick="toggleTickerPause()"></div>
+            <button class="ticker-control" onclick="cambiarMensaje(1)"><i class="ph ph-caret-right"></i></button>
+        </div>
+    </div>
+
+    <!-- =========================================
+         2. NAVBAR
+         ========================================= -->
+    <nav>
+        <div class="nav-content">
+            <div class="buscador-container">
+                <div class="input-wrapper">
+                    <input type="text" id="input-busqueda" placeholder="Buscar productos..." oninput="debounceBusqueda()" onkeypress="verificarEnter(event)" autocomplete="off">
+                    <i class="ph ph-magnifying-glass icono-lupa"></i>
+                </div>
+                <div id="resultados-busqueda" class="lista-resultados"></div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-icon-nav" id="btn-carrito" onclick="abrirCarrito()">
+                    <i class="ph ph-shopping-cart"></i>
+                    <span id="carrito-count" class="badge-count">0</span>
+                </button>
+                <button class="btn-inicio" onclick="irAlInicio()"><i class="ph ph-house"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- =========================================
+         3. PANTALLA PRINCIPAL (PORTADAS)
+         ========================================= -->
+    <section id="seccion-categorias" class="pantalla-activa">
+        <div class="landing-container">
+            <!-- Logo y título -->
+            <div class="landing-header">
+                <img src="img/iconos/wakalogo.webp" alt="Logo Waka Vapes" class="landing-logo" fetchpriority="high" decoding="async">
+                <h1 class="landing-titulo">waka vapes</h1>
+                <div class="landing-separador"></div>
+                <p class="landing-slogan">CALIDAD & PRECIOS BAJOS</p>
+            </div>
+
+            <!-- Tarjetas de categorías estilo AzLeon -->
+            <div class="landing-grid" id="contenedor-categorias-dinamico">
+                <!-- Tarjeta VAPES -->
+                <div class="landing-card" onclick="mostrarCatalogoCompleto()">
+                    <div class="landing-card-image">
+                        <img src="img/vapes/portada_vapes.jpg" alt="Vapes Mayoreo" loading="lazy" decoding="async">
+                        <div class="landing-card-overlay"></div>
+                    </div>
+                    <div class="landing-card-content">
+                        <h3>¡VAPES<br>MAYOREO!</h3>
+                        <span class="landing-card-arrow">→</span>
+                    </div>
+                </div>
+
+                <!-- Tarjeta WAX -->
+                <div class="landing-card" onclick="mostrarCatalogoWax()">
+                    <div class="landing-card-image">
+                        <img src="img/wax/portada_wax.webp" alt="Wax Mayoreo" loading="lazy" decoding="async">
+                        <div class="landing-card-overlay"></div>
+                    </div>
+                    <div class="landing-card-content">
+                        <h3>¡WAX<br>MAYOREO!</h3>
+                        <span class="landing-card-arrow">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- =========================================
+             SECCIÓN PROMOCIONAL ESTILO AZLEON
+             ========================================= -->
+        <div class="promo-section">
+            <!-- Bloque VAPES -->
+            <div class="promo-block">
+                <div class="promo-image">
+                    <img src="img/vapes/portada_vapes.jpg" alt="Vapes Mayoreo" loading="lazy" decoding="async">
+                </div>
+                <div class="promo-content">
+                    <h2>¡VAPES!</h2>
+                    <h3>¿Por qué elegirnos?</h3>
+                    <p>Manejamos productos oficiales, y los mejores precios de vapes en todo mexico, somos mayoristas de vapes confiables.</p>
+                    <p>Vapes baratos, entra y disfruta de nuestro catálago con precios accesibles.</p>
+                    <p>Te ayudamos a que emprendas tu negocio con bajo presupuesto.</p>
+                    <p class="promo-highlight">"Manejamos los mejores precios en mayoreo, entregas seguras hasta la puerta de tu casa"</p>
+                    <button class="promo-btn" onclick="mostrarCatalogoCompleto()">VAPES</button>
+                </div>
+            </div>
+
+            <!-- Bloque WAX -->
+            <div class="promo-block promo-block-reverse">
+                <div class="promo-image">
+                    <img src="img/wax/portada_wax.webp" alt="Wax Mayoreo" loading="lazy" decoding="async">
+                </div>
+                <div class="promo-content">
+                    <h2>¡PRODUCTOS WAX!</h2>
+                    <h3>Variedad de wax</h3>
+                    <p>Manejamos mieles importadas, puedes preguntar y cotizar por nuestros productos en privado.</p>
+                    <p>Queremos darte lo mejor para ti y los mejores precios, ¡cotiza ya!.</p>
+                    <button class="promo-btn" onclick="mostrarCatalogoWax()">WAX</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================
+         4. PANTALLA GRID (PRODUCTOS)
+         ========================================= -->
+    <section id="seccion-grid" class="pantalla-oculta">
+        <div class="grid-header-spacer"></div>
+        <div class="grid-productos" id="grid-productos"></div>
+        <div class="espacio-final"></div>
+    </section>
+
+    <!-- =========================================
+         5. MODAL DE PEDIDO
+         ========================================= -->
+    <div id="modal-pedido" class="modal">
+        <div class="modal-content">
+            <button class="cerrar-modal" onclick="cerrarModal()"><i class="ph ph-x"></i></button>
+            <div class="modal-body">
+                <div class="producto-header">
+                    <div class="producto-imagen-grande">
+                        <img id="modal-img" src="" alt="Producto">
+                    </div>
+                    <div class="producto-info-base">
+                        <h2 id="modal-titulo-producto">Nombre</h2>
+                        <p id="modal-modelo-producto" class="modelo-texto">Modelo</p>
+                            <p id="modal-puffs-formateado" class="modelo-texto" style="font-size:0.98em;color:#bdbdbd;margin-top:-6px;"></p>
+                        <div class="precio-container">
+                             <div id="contenedor-precio-modal"></div>
+                             <span class="stock-badge"><i class="ph ph-check-circle"></i> Disponible</span>
+                        </div>
+                    </div>
+                </div>
+                <hr class="separador-modal">
+                <div class="formulario-pedido">
+                    <div class="grupo-input">
+                        <label id="titulo-variantes">Opción:</label>
+                        <div id="contenedor-variantes"></div>
+                        <input type="hidden" id="variante-seleccionada-valor">
+                    </div>
+                    <div class="fila-controles">
+                        <div class="control-cantidad-wrapper">
+                            <label>Cantidad</label>
+                            <div class="control-cantidad">
+                                <button class="btn-cant" type="button" onclick="cambiarCantidad(-1)"><i class="ph ph-minus"></i></button>
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" id="cantidad-seleccionada" value="1" onfocus="this.select()" oninput="limpiarYValidarCantidad()" onblur="validarCantidadModal()" placeholder="1" autocomplete="off">
+                                <button class="btn-cant" type="button" onclick="cambiarCantidad(1)"><i class="ph ph-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="metodo-pago-wrapper">
+                            <label>Pago</label>
+                            <div class="toggle-pago">
+                                <input type="radio" name="pago" id="pago-transf" value="Transferencia" checked>
+                                <label for="pago-transf">Transf.</label>
+                                <input type="radio" name="pago" id="pago-efectivo" value="Efectivo">
+                                <label for="pago-efectivo">Efectivo</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Orden de posición (editable sólo en código) -->
+                    <div class="footer-compra-sticky">
+                        <div class="total-final">
+                            <span>Total Estimado:</span>
+                            <span id="total-precio">$0</span>
+                        </div>
+                        <div style="display:flex; gap:8px; flex-direction:column;">
+                            <button id="btn-agregar-carrito-modal" class="boton-pedir" onclick="handleCarritoToggle();" title="Agregar al carrito">
+                                <i class="ph ph-shopping-cart"></i> Agregar al carrito
+                            </button>
+                            <button id="btn-whatsapp-modal" class="boton-whatsapp-modal" onclick="enviarWhatsapp();">
+                                <i class="ph ph-whatsapp-logo" style="margin-right:8px;"></i><span>Comprar ya</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="advertencia-pago">Todo precio será verificado por producto</div>
+                </div>
+                <div class="seccion-recomendados">
+                    <div class="header-recomendados">
+                        <h3>También te podría interesar</h3>
+                        <div class="controles-scroll">
+                            <button onclick="scrollRecomendados(-1)"><i class="ph ph-caret-left"></i></button>
+                            <button onclick="scrollRecomendados(1)"><i class="ph ph-caret-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="grid-recomendados-wrapper">
+                        <div class="grid-recomendados" id="grid-recomendados"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp Button -->
+    <button id="whatsapp-floating" class="btn-whatsapp" onclick="toggleFloatingCart()" aria-label="Abrir carrito">
+        <i class="ph ph-whatsapp-logo"></i>
+        <span id="whatsapp-badge" class="whatsapp-badge">0</span>
+    </button>
+
+    <!-- Floating cart panel -->
+    <div id="floating-cart-panel" class="floating-cart-panel" style="display:none;" aria-hidden="true">
+        <div class="floating-cart-header">
+            <strong>Tu Pedido</strong>
+            <button class="cerrar-flotante" onclick="closeFloatingCart()" aria-label="Cerrar carrito"><i class="ph ph-x"></i></button>
+        </div>
+        <!-- compact floating cart header area (no inputs) -->
+        <div class="floating-cart-subtitle">
+            <div>Revisa tu pedido y confirma</div>
+        </div>
+        <div id="floating-cart-list" class="floating-cart-list"></div>
+        <div class="floating-cart-footer">
+            <div class="floating-total">Total: <span id="floating-total">$0</span></div>
+            <div class="floating-actions">
+                <button id="btn-hacer-pedido" class="btn-primary" onclick="sendWholeOrderWhatsApp()">
+                    <i class="ph ph-whatsapp-logo" style="margin-right:6px; font-size:1.1rem;"></i>
+                    Pedir Ahora
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón flotante para hacer pedido desde el carrito -->
+    <button id="btn-order-now-floating" class="btn-order-now" onclick="sendWholeOrderWhatsApp()" style="display:none;">Comprar ya</button>
+
+    <!-- Prompt de correo para factura -->
+    <div id="email-prompt" class="custom-alert-overlay" style="display:none; z-index:9999;">
+        <div class="custom-alert-box" style="max-width: 380px;">
+            <div class="alert-icon"><i class="ph ph-envelope-simple"></i></div>
+            <h3>Correo para factura</h3>
+            <p>Escribe el correo del cliente. Se enviará la factura y copia a la tienda antes de abrir WhatsApp.</p>
+            <input type="email" id="email-prompt-input" placeholder="ejemplo@(gmail, outlook, hotmail).com" autocomplete="email" class="input-modal-texto" style="margin:12px 0;">
+            <div style="display:flex; gap:10px; width:100%;">
+                <button class="btn-alert" style="background:#444;" onclick="cerrarPromptCorreo()">Cancelar</button>
+                <button class="btn-alert" onclick="confirmarPromptCorreo()">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p class="footer-logo">WAKA VAPES</p>
+        <p class="copyright">© 2025 Waka Vapes - Todos los derechos reservados</p>
+    </footer>
+
+    <!-- =================================================================
+         LÓGICA JAVASCRIPT
+         ================================================================= -->
+    <!-- Productos separados en archivos externos para fácil edición -->
+    <script src="vapes.js"></script>
+    <script src="wax.js"></script>
+    <script>
+        // Combinar las listas de productos (vapes + wax)
+        // Agregar productos wax a la lista principal
+        if (typeof listaProductosWax !== 'undefined') {
+            listaProductosWax.forEach(p => listaProductos.push(p));
+        }
+    </script>
+    <script>
+        const formatearDinero = (cantidad) => {
+            return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(cantidad);
+        };
+
+        // TICKER: mensajes y tiempo de rotación (necesarios para iniciarTicker)
+        const MENSAJES_TICKER = [
+            'Los precios mas bajos del mercado',
+            'Precios de remate ',
+            '⚡ Aprovecha ya, compra ahora ⚡',
+            'Pedidos al <span class="ticker-phone">+52 1 56 3167 6303</span> 📞',
+            ' Waka Vapes 👑'
+        ];
+        const TIEMPO_ROTACION = 4000; // ms
+
+        // ============================================================
+        // AJUSTES RÁPIDOS (EDITA AQUÍ PARA ACTIVAR/DESACTIVAR)
+        // - mostrarCTAPublicidad: botón "Click aquí" en la tarjeta de publicidad
+        // - pausarVideosFueraDeVista: usa IntersectionObserver para pausar el video si no se ve
+        // - mostrarBackToTop: muestra el botón flotante para volver arriba
+        // ============================================================
+        const AJUSTES_RAPIDOS = {
+            mostrarCTAPublicidad: true,
+            pausarVideosFueraDeVista: true,
+            mostrarBackToTop: true
+        };
+
+        // Endpoint de correo (Apps Script) y copia a tienda
+        const WHATSAPP_PHONE = '5215631676303';
+        const EMAIL_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyJJYKVVlv34boAX_e--sLTOkRIOJAKNcpZLJuero8t9CsHQF1pK-pLZ9FnkCrnJh6s/exec';
+        const EMAIL_CC = 'josuearriaga98@gmail.com'; // Copia para la tienda
+        const EMAIL_COOLDOWN_MS = 30000; // 30s entre envíos
+        let _emailCooldownUntil = 0;
+        let _pendingAction = null; // 'carrito' o 'modal'
+
+        // =================================================================
+        // === ZONAS SEGUROS PARA EDITAR ===
+        // - CONFIG_SECCIONES: tarjetas de portada (títulos, subtítulos, imágenes)
+        // - MENSAJES_TICKER: líneas que aparecen en el ticker superior
+        // - listaProductos: catálogo de productos (nombre, precio, imagen, variantes)
+        // - Teléfono WhatsApp: modificar la variable `telefono` dentro de
+        //   `enviarWhatsapp()` y `sendWholeOrderWhatsApp()` cuando sea necesario.
+        // =================================================================
+        const CONFIG_SECCIONES = [
+            {
+                id: 'vapes',
+                titulo: 'Catálogo Waka Vapes',
+                subtitulo: 'Todas nuestras variedades disponibles',
+                img: 'img/vapes/portada_vapes.jpg',
+                disponible: true,
+                visible: true,
+                orden: 1
+            },
+            {
+                id: 'wax',
+                titulo: 'Catálogo Wax',
+                subtitulo: 'Los mejores concentrados',
+                img: 'img/wax/portada_wax.webp',
+                disponible: true,
+                visible: true,
+                orden: 2
+            }
+        ];
+
+        // listaProductos se carga desde vapes.js (archivo externo)
+        // Para editar productos, modifica el archivo: vapes.js
+
+        let productoActual = null;
+        let carrito = JSON.parse(localStorage.getItem('vp_carrito')) || [];
+        let mensajeIndex = 0;
+        let tickerInterval;
+
+        // Cargar carrito del localStorage y renderizar
+        function cargarCarritoDelStorage() {
+            const stored = localStorage.getItem('vp_carrito');
+            if (stored) {
+                try {
+                    let carritoGuardado = JSON.parse(stored);
+                    
+                    // Validar y completar datos de cada item del carrito
+                    carrito = carritoGuardado.map(item => {
+                        // Buscar el producto original para asegurar datos completos
+                        const productoOriginal = listaProductos.find(p => p.id === item.id);
+                        
+                        if (productoOriginal) {
+                            return {
+                                id: item.id,
+                                cantidad: item.cantidad || 1,
+                                variante: item.variante || 'Estándar',
+                                nombre: item.nombre || productoOriginal.nombre,
+                                precio: item.precio || productoOriginal.precio,
+                                img: item.img || productoOriginal.img
+                            };
+                        }
+                        // Si no se encuentra el producto, devolver el item tal cual
+                        return item;
+                    }).filter(item => {
+                        // Filtrar items que no tienen datos válidos
+                        return item && item.id && item.nombre && item.precio !== undefined;
+                    });
+                    
+                    // Guardar el carrito corregido
+                    localStorage.setItem('vp_carrito', JSON.stringify(carrito));
+                    actualizarBadgeCarrito();
+                    renderFloatingCart();
+                } catch (e) {
+                    console.log('Error cargando carrito:', e);
+                    carrito = [];
+                    localStorage.setItem('vp_carrito', '[]');
+                }
+            }
+        }
+
+        // Si la vista del carrito está abierta (seccion-grid), forzar re-render
+        function syncCarritoViewIfOpen() {
+            try {
+                const gridEl = document.getElementById('seccion-grid');
+                if (gridEl && gridEl.style.display === 'block') {
+                    // Solo actualizar si ya estamos en la vista del carrito
+                    const contenedor = document.getElementById('grid-productos');
+                    if (contenedor && contenedor.querySelector('.carrito-header')) {
+                        abrirCarrito();
+                    }
+                }
+            } catch (e) {
+                console.warn('syncCarritoViewIfOpen error', e);
+            }
+        }
+
+        function iniciarTicker() {
+            mostrarMensajeTicker(mensajeIndex);
+            tickerInterval = setInterval(() => { cambiarMensaje(1); }, TIEMPO_ROTACION);
+        }
+        
+        let tickerPausado = false;
+        
+        function toggleTickerPause() {
+            tickerPausado = !tickerPausado;
+            const display = document.getElementById('ticker-display');
+            
+            if (tickerPausado) {
+                clearInterval(tickerInterval);
+                display.style.textDecoration = 'underline';
+                display.style.cursor = 'pointer';
+            } else {
+                tickerInterval = setInterval(() => { cambiarMensaje(1); }, TIEMPO_ROTACION);
+                display.style.textDecoration = 'none';
+            }
+        }
+        
+        function mostrarMensajeTicker(index) {
+            const display = document.getElementById('ticker-display');
+            display.style.opacity = 0;
+            display.style.transform = "translateY(5px)";
+            setTimeout(() => {
+                let msg = (Array.isArray(MENSAJES_TICKER) && MENSAJES_TICKER.length) ? MENSAJES_TICKER[index] || MENSAJES_TICKER[0] : '';
+                display.innerHTML = msg;
+                display.style.opacity = 1;
+                display.style.transform = "translateY(0)";
+                
+                // Agregar event listener al teléfono si existe
+                const phoneSpan = display.querySelector('.ticker-phone');
+                if (phoneSpan) {
+                    phoneSpan.onclick = function(e) {
+                        e.stopPropagation();
+                        const numero = phoneSpan.textContent.trim().replace(/\s/g, '');
+                        window.open(`https://wa.me/52${numero}`, '_blank');
+                    };
+                }
+            }, 300);
+        }
+        function cambiarMensaje(dir) {
+            if (tickerPausado) return; // No cambiar si está pausado
+            clearInterval(tickerInterval);
+            tickerInterval = setInterval(() => { cambiarMensaje(1); }, TIEMPO_ROTACION);
+            mensajeIndex += dir;
+            if (mensajeIndex >= MENSAJES_TICKER.length) mensajeIndex = 0;
+            if (mensajeIndex < 0) mensajeIndex = MENSAJES_TICKER.length - 1;
+            mostrarMensajeTicker(mensajeIndex);
+        }
+
+        let toastTimeout = null;
+        let toastHideTimeout = null;
+        
+        function mostrarToast(mensaje) {
+            const toast = document.getElementById('toast-notification');
+            const msg = document.getElementById('toast-message');
+            
+            // Limpiar timeouts anteriores para evitar problemas con llamadas rápidas
+            if (toastTimeout) clearTimeout(toastTimeout);
+            if (toastHideTimeout) clearTimeout(toastHideTimeout);
+            
+            msg.innerText = mensaje;
+            // Asegurar que el estilo inline no impida que la clase muestre el toast
+            toast.style.display = '';
+            toast.className = "toast show";
+            
+            // Ocultar después de 2.5s y limpiar display inline
+            toastTimeout = setTimeout(() => { 
+                toast.className = toast.className.replace("show", ""); 
+                // Espera la animación y luego oculta por completo
+                toastHideTimeout = setTimeout(() => { toast.style.display = 'none'; }, 250);
+            }, 2500);
+        }
+
+        // Prompt sencillo para capturar el correo antes de enviar la factura
+        function abrirPromptCorreo(action) {
+            _pendingAction = action || null;
+            const prompt = document.getElementById('email-prompt');
+            const input = document.getElementById('email-prompt-input');
+            if (!prompt || !input) {
+                mostrarAlertaModal('No se pudo abrir el formulario de correo.');
+                return;
+            }
+            // Cerrar el panel del carrito flotante para que no estorbe
+            const floatingPanel = document.getElementById('floating-cart-panel');
+            if (floatingPanel) {
+                floatingPanel.classList.remove('open');
+            }
+            prompt.style.display = 'flex';
+            setTimeout(() => { try { input.focus(); } catch (e) {} }, 80);
+        }
+
+        function cerrarPromptCorreo() {
+            const prompt = document.getElementById('email-prompt');
+            if (prompt) prompt.style.display = 'none';
+            _pendingAction = null;
+        }
+
+        async function confirmarPromptCorreo() {
+            const input = document.getElementById('email-prompt-input');
+            const correo = (input ? input.value : '').trim();
+
+            if (!correo || !correo.includes('@') || !correo.includes('.')) {
+                mostrarAlertaModal('Ingresa un correo válido para enviar la factura.');
+                return;
+            }
+
+            const now = Date.now();
+            if (now < _emailCooldownUntil) {
+                const wait = Math.ceil((_emailCooldownUntil - now) / 1000);
+                mostrarToast(`Espera ${wait}s para volver a enviar la factura.`);
+                return;
+            }
+
+            const action = _pendingAction;
+            cerrarPromptCorreo();
+            await procesarAccionConCorreo(correo, action);
+        }
+
+        // Muestra una confirmación visual destacada al agregar producto
+        let _successTimeout = null;
+        function mostrarConfirmacionAgregado(mensaje = 'Agregado exitosamente') {
+            try {
+                const box = document.getElementById('success-alert');
+                const txt = document.getElementById('success-text');
+                if (!box || !txt) return;
+                txt.innerText = mensaje;
+                box.classList.remove('show');
+                // Force reflow to restart animation
+                void box.offsetWidth;
+                box.classList.add('show');
+                box.setAttribute('aria-hidden','false');
+                // Limpiar timeout anterior
+                if (_successTimeout) clearTimeout(_successTimeout);
+                _successTimeout = setTimeout(() => {
+                    box.classList.remove('show');
+                    box.setAttribute('aria-hidden','true');
+                }, 2000);
+            } catch (e) { console.warn('mostrarConfirmacionAgregado error', e); }
+        }
+        
+        function mostrarAlertaModal(msg) {
+             document.getElementById('alert-title').innerText = "Atención";
+             document.getElementById('alert-message').innerText = msg;
+             document.getElementById('custom-alert').style.display = 'flex';
+        }
+        
+        function cerrarAlerta() {
+             document.getElementById('custom-alert').style.display = 'none';
+        }
+
+        function irArriba() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        
+        // Optimizado: throttle scroll con requestAnimationFrame para mejor INP
+        let _scrollTicking = false;
+        let _cachedBackToTopBtn = null;
+        
+        window.addEventListener('scroll', function() {
+            if (!_scrollTicking) {
+                requestAnimationFrame(function() {
+                    if (!_cachedBackToTopBtn) _cachedBackToTopBtn = document.getElementById('btn-back-to-top');
+                    const btn = _cachedBackToTopBtn;
+                    if (!AJUSTES_RAPIDOS.mostrarBackToTop) {
+                        if (btn) btn.style.display = 'none';
+                        _scrollTicking = false;
+                        return;
+                    }
+                    const scrolled = document.body.scrollTop > 300 || document.documentElement.scrollTop > 300;
+                    if (btn) btn.style.display = scrolled ? "flex" : "none";
+                    _scrollTicking = false;
+                });
+                _scrollTicking = true;
+            }
+        }, { passive: true });
+
+        function actualizarBadgeCarrito() {
+            const badge = document.getElementById('carrito-count');
+            const totalQty = carrito.reduce((sum, it) => sum + (parseInt(it.cantidad, 10) || 0), 0);
+            badge.innerText = totalQty;
+            badge.style.transform = "scale(1.3)";
+            setTimeout(() => badge.style.transform = "scale(1)", 200);
+            // actualizar badge flotante
+            const waBadge = document.getElementById('whatsapp-badge');
+            if (waBadge) waBadge.innerText = totalQty;
+        }
+        
+        function guardarEnCarrito(mostrarConfirmacion = true) {
+            if (!productoActual) return;
+            
+            let cantidad = parseInt(document.getElementById('cantidad-seleccionada').value);
+            let variante = "Estándar";
+            let inputManual = document.getElementById('input-variante-manual');
+            let valorChip = document.getElementById('variante-seleccionada-valor') ? document.getElementById('variante-seleccionada-valor').value : "";
+            
+            if (inputManual && inputManual.value) variante = inputManual.value;
+            else if (valorChip) variante = valorChip;
+            
+            if (productoActual.sabores && productoActual.sabores.length > 0 && !valorChip) {
+                mostrarAlertaModal("⚠️ Por favor selecciona un sabor o variante.");
+                return;
+            }
+
+            // Buscar por producto + variante para permitir múltiples variantes como items separados
+            const existeIndex = carrito.findIndex(item => item.id === productoActual.id && item.variante === variante);
+
+            if (existeIndex === -1) {
+                // Agregar nuevo item al carrito
+                carrito.push({
+                    id: productoActual.id,
+                    cantidad: cantidad || 1,
+                    variante: variante,
+                    nombre: productoActual.nombre,
+                    precio: productoActual.precio,
+                    img: productoActual.img
+                });
+
+                if (mostrarConfirmacion) {
+                    mostrarToast('¡Agregado al carrito!');
+                    mostrarConfirmacionAgregado('Agregado exitosamente');
+                }
+
+            } else {
+                // Esta variante ya existe, actualizar cantidad
+                carrito[existeIndex].cantidad = (carrito[existeIndex].cantidad || 1) + (cantidad || 1);
+                if (mostrarConfirmacion) {
+                    mostrarToast('Cantidad actualizada');
+                }
+            }
+            localStorage.setItem('vp_carrito', JSON.stringify(carrito));
+            actualizarBadgeCarrito();
+            renderFloatingCart();
+            syncCarritoViewIfOpen();
+        }
+
+        function handleCarritoToggle() {
+            if (!productoActual) return;
+            
+            // Obtener la variante seleccionada
+            const hiddenInput = document.getElementById('variante-seleccionada');
+            const inputManual = document.getElementById('input-variante-manual');
+            const varianteActual = hiddenInput ? hiddenInput.value : (inputManual ? inputManual.value : '');
+            
+            // Verificar si esta variante específica ya está en el carrito
+            const existeVariante = carrito.some(item => item.id === productoActual.id && item.variante === varianteActual);
+            
+            if (existeVariante) {
+                // Esta variante ya existe, mostrar mensaje
+                mostrarToast('Este sabor ya está en el carrito');
+            } else {
+                // Agregar al carrito
+                guardarEnCarrito();
+                mostrarToast('✓ Agregado al carrito');
+            }
+        }
+
+        // Función para actualizar el botón del modal - siempre muestra "Agregar al carrito"
+        function actualizarBotonModal() {
+            if (!productoActual) return;
+            const botonAgregar = document.getElementById('btn-agregar-carrito-modal');
+            if (!botonAgregar) return;
+            
+            // Siempre mostrar "Agregar al carrito" para permitir agregar diferentes sabores
+            botonAgregar.innerHTML = '<i class="ph ph-shopping-cart"></i> Agregar al carrito';
+            botonAgregar.classList.remove('btn-quitar-carrito');
+            botonAgregar.classList.add('boton-pedir');
+        }
+
+        function abrirCarrito() {
+            if(carrito.length === 0) {
+                mostrarAlertaModal("Tu carrito está vacío. ¡Agrega productos!");
+                return;
+            }
+            document.getElementById('seccion-categorias').style.display = 'none';
+            document.getElementById('seccion-grid').style.display = 'block';
+            
+            // Ya no mostrar botón flotante - ahora está en el header del carrito
+            const btnOrderNow = document.getElementById('btn-order-now-floating');
+            if (btnOrderNow) {
+                btnOrderNow.style.display = 'none';
+            }
+            
+            const contenedor = document.getElementById('grid-productos');
+            // Header del carrito con botón COMPRAR YA integrado
+            contenedor.innerHTML = `<div class="carrito-header-sticky" style="grid-column: 1 / -1;">
+                <span class="carrito-titulo">Carrito</span>
+                <button class="btn-comprar-carrito" onclick="sendWholeOrderWhatsApp()">
+                    <i class="ph ph-whatsapp-logo"></i> Comprar Ya
+                </button>
+            </div>`;
+            
+            carrito.forEach(item => {
+                // Validar que el item tenga datos completos
+                if (!item || !item.nombre || item.precio === undefined) {
+                    console.warn('Item inválido en carrito:', item);
+                    return; // Saltar este item
+                }
+                
+                // Verificar si es producto wax
+                const productoOriginal = listaProductos.find(p => p.id === item.id);
+                const esWax = productoOriginal && productoOriginal.categoria === 'wax';
+                
+                const cantidad = parseInt(item.cantidad, 10) || 1;
+                const precio = parseFloat(item.precio) || 0;
+                
+                // Wax muestra COTIZAR PRECIO
+                const precioMostrar = esWax ? '<span class="cotizar-precio">COTIZAR PRECIO</span>' : formatearDinero(precio * cantidad);
+                
+                const tarjeta = document.createElement('div');
+                tarjeta.className = 'tarjeta-producto';
+                tarjeta.innerHTML = `
+                    <div class="img-wrapper"><img src="${item.img || 'img/iconos/wakavapes_icono.webp'}" alt="${item.nombre || 'Producto'}" onerror="this.onerror=null;this.src='img/iconos/wakavapes_icono.webp'"></div>
+                    <div class="info-card carrito-card-info">
+                        <h3>${item.nombre || 'Producto'}</h3>
+                        <p class="variante-text">${item.variante || 'Estándar'}</p>
+                        <div class="qty-controls-carrito">
+                            <button class="btn-cant" type="button" onclick="event.stopPropagation(); updateItemCantidad(${item.id}, '${encodeURIComponent(item.variante || '')}', -1)"><i class="ph ph-minus"></i></button>
+                            <span class="qty-number">${cantidad}</span>
+                            <button class="btn-cant" type="button" onclick="event.stopPropagation(); updateItemCantidad(${item.id}, '${encodeURIComponent(item.variante || '')}', 1)"><i class="ph ph-plus"></i></button>
+                        </div>
+                        <p class="subtotal-text">${precioMostrar}</p>
+                    </div>
+                `;
+                // Wax no abre modal
+                if (!esWax) {
+                    tarjeta.onclick = function() { abrirModal(item.id); };
+                    tarjeta.style.cursor = 'pointer';
+                } else {
+                    tarjeta.style.cursor = 'default';
+                }
+                contenedor.appendChild(tarjeta);
+            });
+        }
+
+        // ============ OPTIMIZACIÓN: DEBOUNCE PARA BÚSQUEDA ============
+        let _debounceTimer = null;
+        const DEBOUNCE_DELAY = 150; // ms - espera antes de ejecutar búsqueda
+        const MAX_RESULTADOS_BUSQUEDA = 12; // Limitar resultados para mejor rendimiento
+        
+        function debounceBusqueda() {
+            // Cancelar el timer anterior si existe
+            if (_debounceTimer) clearTimeout(_debounceTimer);
+            // Programar nueva ejecución
+            _debounceTimer = setTimeout(filtrarBusqueda, DEBOUNCE_DELAY);
+        }
+
+        function filtrarBusqueda() {
+            const input = document.getElementById('input-busqueda');
+            const filtro = input.value.toLowerCase().trim();
+            const resultadosDiv = document.getElementById('resultados-busqueda');
+            
+            // Si está vacío, ocultar y salir rápido
+            if (filtro.length < 1) { 
+                resultadosDiv.style.display = 'none';
+                resultadosDiv.innerHTML = '';
+                return;
+            }
+
+            // Pre-calcular secciones válidas una sola vez
+            const seccionesValidas = new Set(
+                CONFIG_SECCIONES
+                    .filter(s => s.visible && s.disponible)
+                    .map(s => s.id)
+            );
+
+            // Filtrar con límite para mejor rendimiento
+            const coincidencias = [];
+            for (let i = 0; i < listaProductos.length && coincidencias.length < MAX_RESULTADOS_BUSQUEDA; i++) {
+                const prod = listaProductos[i];
+                if (!prod.activo) continue;
+                if (!seccionesValidas.has(prod.categoria)) continue;
+                const nombreLower = prod.nombre.toLowerCase();
+                const modeloLower = prod.modelo.toLowerCase();
+                if (nombreLower.includes(filtro) || modeloLower.includes(filtro)) {
+                    coincidencias.push(prod);
+                }
+            }
+
+            if (coincidencias.length > 0) {
+                // Usar DocumentFragment para mejor rendimiento (una sola operación DOM)
+                const fragment = document.createDocumentFragment();
+                
+                coincidencias.forEach(prod => {
+                    const item = document.createElement('div');
+                    const esWax = prod.categoria === 'wax';
+                    item.className = 'resultado-item' + (prod.agotado ? ' resultado-agotado' : '');
+                    
+                    // Crear elementos en lugar de usar innerHTML para mejor rendimiento
+                    const img = document.createElement('img');
+                    img.src = prod.img;
+                    img.loading = 'lazy';
+                    img.decoding = 'async';
+                    img.style.cssText = `width:36px;height:36px;object-fit:cover;border-radius:5px;margin-right:8px;${prod.agotado ? 'filter:grayscale(100%);opacity:0.6;' : ''}`;
+                    img.onerror = function() { this.src = 'img/iconos/wakavapes_icono.webp'; };
+                    
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'info-busqueda';
+                    
+                    const nombreSpan = document.createElement('span');
+                    nombreSpan.className = 'nombre-busqueda';
+                    nombreSpan.textContent = prod.nombre;
+                    
+                    const modeloSpan = document.createElement('span');
+                    modeloSpan.className = 'modelo-busqueda';
+                    modeloSpan.textContent = prod.modelo;
+                    
+                    infoDiv.appendChild(nombreSpan);
+                    infoDiv.appendChild(modeloSpan);
+                    
+                    item.appendChild(img);
+                    item.appendChild(infoDiv);
+                    
+                    // Badges
+                    if (esWax && !prod.agotado) {
+                        const badgeCotizar = document.createElement('span');
+                        badgeCotizar.className = 'badge-cotizar-busqueda';
+                        badgeCotizar.textContent = 'COTIZAR';
+                        item.appendChild(badgeCotizar);
+                    }
+                    if (prod.agotado) {
+                        const badgeAgotado = document.createElement('span');
+                        badgeAgotado.className = 'badge-agotado-busqueda';
+                        badgeAgotado.textContent = 'AGOTADO';
+                        item.appendChild(badgeAgotado);
+                        item.style.cursor = 'not-allowed';
+                    }
+                    
+                    // Evento click optimizado
+                    if (!prod.agotado) {
+                        item.onclick = () => {
+                            input.value = '';
+                            resultadosDiv.style.display = 'none';
+                            resultadosDiv.innerHTML = '';
+                            irASeccionYResaltar(prod.id, prod.categoria, !esWax);
+                        };
+                    }
+                    
+                    fragment.appendChild(item);
+                });
+                
+                // Una sola operación DOM
+                resultadosDiv.innerHTML = '';
+                resultadosDiv.appendChild(fragment);
+                resultadosDiv.style.display = 'block';
+            } else {
+                resultadosDiv.style.display = 'none';
+                resultadosDiv.innerHTML = '';
+            }
+        }
+        
+        // Función para ir a una sección y resaltar un producto específico
+        // abrirModalDespues: si es true, abre el modal después de resaltar (para vapes)
+        function irASeccionYResaltar(idProducto, categoria, abrirModalDespues = false) {
+            // Cargar el catálogo de la categoría
+            cargarCatalogo(categoria);
+            
+            // Esperar a que se renderice el grid y luego buscar y resaltar el producto
+            setTimeout(() => {
+                const tarjetas = document.querySelectorAll('.tarjeta-producto');
+                let tarjetaEncontrada = null;
+                
+                tarjetas.forEach(tarjeta => {
+                    // Buscar la tarjeta que corresponde al producto
+                    if (tarjeta.dataset.productId == idProducto) {
+                        tarjetaEncontrada = tarjeta;
+                        // Scroll al producto
+                        tarjeta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        // Agregar clase de resaltado
+                        tarjeta.classList.add('producto-resaltado');
+                        // Quitar la clase después de la animación
+                        setTimeout(() => {
+                            tarjeta.classList.remove('producto-resaltado');
+                        }, 2000);
+                    }
+                });
+                
+                // Si se debe abrir el modal (para vapes), hacerlo después de un breve delay
+                if (abrirModalDespues && tarjetaEncontrada) {
+                    setTimeout(() => {
+                        abrirModal(idProducto);
+                    }, 600); // Esperar un poco para que se vea el resaltado primero
+                }
+            }, 300);
+        }
+
+        function verificarEnter(event) {
+            if (event.key === "Enter") {
+                const texto = document.getElementById('input-busqueda').value.toLowerCase();
+                if (texto.trim() === "") return;
+                
+                const resultados = listaProductos.filter(prod => {
+                    if (!prod.activo) return false;
+                    if (!prod.nombre.toLowerCase().includes(texto) && !prod.modelo.toLowerCase().includes(texto)) return false;
+                    const seccionCategoria = CONFIG_SECCIONES.find(s => s.id === prod.categoria);
+                    if (!seccionCategoria) return false;
+                    return seccionCategoria.visible === true && seccionCategoria.disponible === true;
+                });
+
+                document.getElementById('seccion-categorias').style.display = 'none';
+                document.getElementById('seccion-grid').style.display = 'block';
+                const contenedor = document.getElementById('grid-productos');
+                contenedor.innerHTML = "";
+                
+                if(resultados.length === 0) {
+                    contenedor.innerHTML = `<p style="text-align:center; width:100%; color:#888;">No se encontraron productos.</p>`;
+                } else {
+                    renderizarGrid(resultados, contenedor, false);
+                }
+                
+                document.getElementById('resultados-busqueda').style.display = 'none';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        
+        document.addEventListener('click', function(event) {
+            const buscador = document.querySelector('.buscador-container');
+            if (!buscador.contains(event.target)) {
+                document.getElementById('resultados-busqueda').style.display = 'none';
+            }
+        });
+
+        function renderizarMenuInicio() {
+            const cont = document.getElementById('contenedor-categorias-dinamico');
+            cont.innerHTML = '';
+            
+            // Obtener la configuración de la sección de vapes
+            const seccionVapes = CONFIG_SECCIONES.find(s => s.id === 'vapes');
+            const imgPortadaVapes = seccionVapes ? seccionVapes.img : 'img/vapes/portada_vapes.jpg';
+            
+            // Crear la tarjeta de vapes con nuevo estilo
+            const divVapes = document.createElement('div');
+            divVapes.className = 'landing-card';
+            divVapes.style.animationDelay = '0.1s';
+            divVapes.onclick = () => mostrarCatalogoCompleto();
+            
+            divVapes.innerHTML = `
+                <div class="landing-card-image">
+                    <img src="${imgPortadaVapes}" alt="Vapes Mayoreo" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/wakavapes_icono.webp'">
+                    <div class="landing-card-overlay"></div>
+                </div>
+                <div class="landing-card-content">
+                    <h3>¡VAPES<br>MAYOREO!</h3>
+                    <span class="landing-card-arrow">→</span>
+                </div>
+            `;
+            cont.appendChild(divVapes);
+            
+            // Obtener la configuración de la sección de wax
+            const seccionWax = CONFIG_SECCIONES.find(s => s.id === 'wax');
+            if (seccionWax && seccionWax.visible && seccionWax.disponible) {
+                const imgPortadaWax = seccionWax.img || 'img/wax/portada_wax.webp';
+                
+                // Crear la tarjeta de wax con nuevo estilo
+                const divWax = document.createElement('div');
+                divWax.className = 'landing-card';
+                divWax.style.animationDelay = '0.2s';
+                divWax.onclick = () => mostrarCatalogoWax();
+                
+                divWax.innerHTML = `
+                    <div class="landing-card-image">
+                        <img src="${imgPortadaWax}" alt="Wax Mayoreo" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/wakavapes_icono.webp'">
+                        <div class="landing-card-overlay"></div>
+                    </div>
+                    <div class="landing-card-content">
+                        <h3>¡WAX<br>MAYOREO!</h3>
+                        <span class="landing-card-arrow">→</span>
+                    </div>
+                `;
+                cont.appendChild(divWax);
+            }
+        }
+
+        function cargarCatalogo(filtro) {
+            document.getElementById('seccion-categorias').style.display = 'none';
+            document.getElementById('seccion-grid').style.display = 'block';
+            
+            // Ocultar botón flotante de hacer pedido
+            const btnOrderNow = document.getElementById('btn-order-now-floating');
+            if (btnOrderNow) btnOrderNow.style.display = 'none';
+            
+            setTimeout(() => AOS.refresh(), 100);
+            const contenedor = document.getElementById('grid-productos');
+            // CORRECCIÓN: Asegurar que el título de categoría ocupe todo el ancho
+            contenedor.innerHTML = `<h2 style="width:100%; text-align:center; color:#e0e0e0; margin-bottom:20px; font-size:1.5rem; grid-column: 1 / -1;">${filtro.toUpperCase()}</h2>`;
+            
+            let prods = listaProductos.filter(p => p.activo && p.categoria === filtro);
+            
+            // ORDENAMIENTO: Primero por agotado (los agotados van al final), luego por orden
+            prods.sort((a,b) => {
+                // Si uno está agotado y el otro no, el agotado va al final
+                if (a.agotado && !b.agotado) return 1;
+                if (!a.agotado && b.agotado) return -1;
+                // Si ambos tienen el mismo estado de agotado, ordenar por 'orden'
+                return a.orden - b.orden;
+            });
+            
+            renderizarGrid(prods, contenedor, false); // false para no borrar el título
+            window.scrollTo(0,0);
+        }
+
+        function renderizarGrid(lista, contenedor, limpiar = true) {
+            if (limpiar) contenedor.innerHTML = "";
+            if (lista.length === 0) { 
+                contenedor.innerHTML += `<p style="width:100%; text-align:center; color:#888; margin-top:50px; grid-column: 1 / -1;">No hay productos disponibles.</p>`; 
+                return; 
+            }
+            
+            // Usar DocumentFragment para mejor rendimiento
+            const fragment = document.createDocumentFragment();
+            const maxDelay = Math.min(lista.length, 10); // Limitar delays de animación
+            
+            lista.forEach((prod, idx) => {
+                const tarjeta = document.createElement('div');
+                const estaAgotado = prod.agotado === true;
+                const esWax = prod.categoria === 'wax';
+                tarjeta.className = 'tarjeta-producto' + (estaAgotado ? ' producto-agotado' : '');
+                tarjeta.setAttribute('data-product-id', prod.id);
+                // Agregar un delay mínimo escalonado (max 8 productos con delay)
+                if (idx < 8) {
+                    tarjeta.style.animationDelay = `${idx * 0.05}s`;
+                }
+                
+                // Wax no abre modal, solo permite agregar al carrito
+                if (!esWax) {
+                    tarjeta.onclick = () => { if (!estaAgotado) abrirModal(prod.id); };
+                    tarjeta.style.cursor = estaAgotado ? 'not-allowed' : 'pointer';
+                } else {
+                    tarjeta.style.cursor = 'default';
+                }
+                
+                // Wax muestra COTIZAR PRECIO en lugar del precio
+                const prec = esWax 
+                    ? `<div class="bloque-precios"><span class="precio-card cotizar-precio">COTIZAR PRECIO</span></div>`
+                    : `<div class="bloque-precios"><span class="precio-card">${formatearDinero(prod.precio)}</span></div>`;
+                
+                // Controles rápidos
+                let controlesRapidos = '';
+                const varianteDef = (prod.modelo && prod.modelo.length > 0) ? prod.modelo : 'Estándar';
+                const enCarritoItem = carrito.find(it => it.id === prod.id && it.variante === varianteDef);
+                
+                if (estaAgotado) {
+                    controlesRapidos = `<span class="badge-agotado">AGOTADO</span>`;
+                } else if (enCarritoItem) {
+                    controlesRapidos = esWax 
+                        ? `<button class="btn-agregar-card agregado" onclick="event.stopPropagation();" title="En carrito"><i class="ph ph-check-circle"></i></button>`
+                        : `<button class="btn-agregar-card agregado" onclick="event.stopPropagation(); abrirModal(${prod.id})" title="En carrito"><i class="ph ph-check-circle"></i></button>`;
+                } else {
+                    controlesRapidos = `<button class="btn-agregar-card" onclick="event.stopPropagation(); agregarAlCarritoRapido(${prod.id})" title="Agregar"><i class="ph ph-shopping-cart"></i></button>`;
+                }
+
+                const verDetalles = (!estaAgotado && !esWax) ? '<span class="texto-ver-detalles">Ver Detalles</span>' : '';
+                
+                tarjeta.innerHTML = `<div class="img-wrapper"><img src="${prod.img}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/wakavapes_icono.webp'"></div><div class="info-card"><h3>${prod.nombre}</h3>${prec}<div style="display:flex;gap:8px;justify-content:center;align-items:center;margin-top:10px">${controlesRapidos}${verDetalles}</div></div>`;
+                
+                fragment.appendChild(tarjeta);
+            });
+            
+            // Una sola operación DOM al final
+            contenedor.appendChild(fragment);
+        }
+
+        // Pedir directo desde tarjeta de producto: añade al carrito y abre el panel/enlace
+        function pedirProductoDirecto(idProducto) {
+            const producto = listaProductos.find(p => p.id === idProducto);
+            if (!producto) return;
+            // Variante por defecto
+            let variante = producto.modelo || 'Estándar';
+            if (producto.sabores && producto.sabores.length > 0) variante = producto.sabores[0].nombre;
+            // Buscar item existente por id+variante
+            const idx = carrito.findIndex(it => it.id === producto.id && it.variante === variante);
+            if (idx === -1) {
+                carrito.push({ id: producto.id, cantidad: 1, variante, nombre: producto.nombre, precio: producto.precio, img: producto.img });
+            } else {
+                carrito[idx].cantidad = Number(carrito[idx].cantidad) + 1;
+            }
+            localStorage.setItem('vp_carrito', JSON.stringify(carrito));
+            actualizarBadgeCarrito();
+            renderFloatingCart();
+            // Mostrar toast pequeño y discreto (no modal, así que evitar la alerta animada)
+            mostrarToast('✓ Agregado al carrito');
+            syncCarritoViewIfOpen();
+            openFloatingCart();
+        }
+
+        // Agregar al carrito desde tarjeta de producto
+        function agregarAlCarritoRapido(idProducto) {
+            const producto = listaProductos.find(p => p.id === idProducto);
+            if (!producto) return;
+            // Si el producto tiene variantes/sabores, tomar la primera variante disponible por defecto
+            let variante = producto.modelo || 'Estándar';
+            if (producto.sabores && producto.sabores.length > 0) {
+                const primera = producto.sabores.find(s => s.disponible !== false) || producto.sabores[0];
+                if (primera && primera.nombre) variante = primera.nombre;
+            }
+            const idx = carrito.findIndex(it => it.id === producto.id && it.variante === variante);
+            if (idx === -1) {
+                carrito.push({ id: producto.id, cantidad: 1, variante, nombre: producto.nombre, precio: producto.precio, img: producto.img });
+                localStorage.setItem('vp_carrito', JSON.stringify(carrito));
+                actualizarBadgeCarrito();
+                renderFloatingCart();
+                // Desde tarjeta (sin modal): mostrar toast pequeño y discreto
+                mostrarToast('✓ Agregado al carrito');
+                const wb = document.getElementById('whatsapp-badge');
+                if (wb) { wb.classList.add('pulse'); setTimeout(() => wb.classList.remove('pulse'), 900); }
+                syncCarritoViewIfOpen();
+            } else {
+                carrito[idx].cantidad = Number(carrito[idx].cantidad) + 1;
+                localStorage.setItem('vp_carrito', JSON.stringify(carrito));
+                actualizarBadgeCarrito();
+                renderFloatingCart();
+                syncCarritoViewIfOpen();
+                // Actualización: mostrar solo toast para no distraer
+                mostrarToast('✓ Cantidad actualizada');
+            }
+        }
+
+        // Función para mostrar el catálogo completo de vapes
+        function mostrarCatalogoCompleto() {
+            cargarCatalogo('vapes');
+        }
+        
+        // Función para mostrar el catálogo completo de wax
+        function mostrarCatalogoWax() {
+            cargarCatalogo('wax');
+        }
+
+        function irAlInicio() {
+            document.getElementById('seccion-categorias').style.display = 'block';
+            document.getElementById('seccion-grid').style.display = 'none';
+            document.getElementById('input-busqueda').value = '';
+            
+            // Ocultar botón flotante de hacer pedido
+            const btnOrderNow = document.getElementById('btn-order-now-floating');
+            if (btnOrderNow) btnOrderNow.style.display = 'none';
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- MODAL ---
+        function abrirModal(idProducto) {
+            productoActual = listaProductos.find(p => p.id === idProducto);
+            if(!productoActual) return;
+
+            document.getElementById('modal-img').src = productoActual.img;
+            document.getElementById('modal-titulo-producto').innerText = productoActual.nombre;
+                // Mostrar puffs con formato con comas si aplica
+                const puffsMatch = /([0-9]{4,6})\s*puffs?/i.exec(productoActual.modelo);
+                const puffsFormateado = puffsMatch ? Number(puffsMatch[1]).toLocaleString('es-MX') + ' puff' + (puffsMatch[1] !== '1' ? 's' : '') : '';
+                document.getElementById('modal-puffs-formateado').innerText = puffsFormateado;
+                document.getElementById('modal-modelo-producto').innerText = '';
+            
+            const contPrecio = document.getElementById('contenedor-precio-modal');
+            contPrecio.innerHTML = `<span class="precio-modal">${formatearDinero(productoActual.precio)}</span>`;
+
+            document.getElementById('cantidad-seleccionada').value = 1;
+            document.getElementById('total-precio').innerText = formatearDinero(productoActual.precio);
+
+            // Mostrar y cargar valor de orden editable
+            const inputOrden = document.getElementById('input-orden-modal');
+            if (inputOrden) {
+                inputOrden.value = (productoActual.orden !== undefined) ? productoActual.orden : '';
+                inputOrden.onchange = function() { actualizarOrdenProductoActual(Number(this.value)); };
+            }
+
+            // Variantes
+            const contVariantes = document.getElementById('contenedor-variantes');
+            contVariantes.innerHTML = '';
+            if (document.getElementById('variante-seleccionada-valor')) document.getElementById('variante-seleccionada-valor').value = ""; 
+
+            if (productoActual.sabores && productoActual.sabores.length > 0) {
+                document.getElementById('titulo-variantes').innerText = "Selecciona Sabor:";
+                const grid = document.createElement('div'); grid.className = 'grid-variantes';
+                const hiddenInput = document.getElementById('variante-seleccionada-valor');
+
+                productoActual.sabores.forEach(sabor => {
+                    const btn = document.createElement('button');
+                    btn.className = `chip-variante ${sabor.disponible ? '' : 'agotado'}`;
+                    btn.innerText = sabor.nombre;
+                    
+                    // Marcar si ya estaba seleccionado en carrito
+                    const itemEnCarrito = carrito.find(i => i.id === productoActual.id);
+                    if(itemEnCarrito && itemEnCarrito.variante === sabor.nombre) {
+                        btn.classList.add('activo');
+                        hiddenInput.value = sabor.nombre;
+                    }
+
+                    if (sabor.disponible) {
+                        btn.onclick = function() {
+                            document.querySelectorAll('.chip-variante').forEach(b => b.classList.remove('activo'));
+                            btn.classList.add('activo');
+                            hiddenInput.value = sabor.nombre;
+                        };
+                    }
+                    grid.appendChild(btn);
+                });
+                contVariantes.appendChild(grid);
+            } else {
+                document.getElementById('titulo-variantes').innerText = "Especificación:";
+                // Recuperar valor
+                const itemEnCarrito = carrito.find(i => i.id === productoActual.id);
+                let val = itemEnCarrito ? itemEnCarrito.variante : productoActual.modelo;
+                contVariantes.innerHTML = `<input type="text" id="input-variante-manual" value="${val}" readonly class="input-modal-texto">`;
+            }
+
+            // Botón siempre muestra "Agregar al carrito" para permitir múltiples sabores
+            const botonAgregar = document.getElementById('btn-agregar-carrito-modal');
+            
+            botonAgregar.innerHTML = '<i class="ph ph-shopping-cart"></i> Agregar al carrito';
+            botonAgregar.classList.remove('btn-quitar-carrito');
+            botonAgregar.classList.add('boton-pedir');
+
+            // Recomendados (excluir productos agotados)
+            const recomendados = listaProductos.filter(p => p.categoria === productoActual.categoria && p.id !== productoActual.id && p.activo && !p.agotado).slice(0, 5);
+            const gridRecom = document.getElementById('grid-recomendados');
+            gridRecom.innerHTML = '';
+            recomendados.forEach(rec => {
+                const card = document.createElement('div');
+                card.className = 'card-recomendada';
+                card.onclick = function() { window.scrollTo({ top: 0, behavior: 'smooth' }); abrirModal(rec.id); };
+                card.innerHTML = `<img src="${rec.img}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/wakavapes_icono.webp'"><div><p class="rec-nombre">${rec.nombre}</p><p class="rec-precio">${formatearDinero(rec.precio)}</p></div>`;
+                gridRecom.appendChild(card);
+            });
+            // Añadir flechas flotantes para scroll táctil en recomendaciones
+            const wrapper = document.querySelector('.grid-recomendados-wrapper');
+            // Eliminar flechas previas si existen
+            ['.recom-arrow-left','.recom-arrow-right'].forEach(s => { const e = wrapper.querySelector(s); if (e) e.remove(); });
+            const left = document.createElement('button');
+            left.className = 'recom-arrow recom-arrow-left';
+            left.innerHTML = '<i class="ph ph-caret-left"></i>';
+            left.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                gridRecom.scrollTo({ left: gridRecom.scrollLeft - 220, behavior: 'smooth' });
+            };
+            const right = document.createElement('button');
+            right.className = 'recom-arrow recom-arrow-right';
+            right.innerHTML = '<i class="ph ph-caret-right"></i>';
+            right.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                gridRecom.scrollTo({ left: gridRecom.scrollLeft + 220, behavior: 'smooth' });
+            };
+            wrapper.appendChild(left); wrapper.appendChild(right);
+
+            const modalEl = document.getElementById('modal-pedido');
+            modalEl.style.display = 'flex';
+            document.body.classList.add('modal-open');
+            // Asegurar que el modal está completamente visible
+            setTimeout(() => {
+                const modalBody = modalEl.querySelector('.modal-body');
+                if (modalBody) { modalBody.scrollTop = 0; }
+                const closeBtn = modalEl.querySelector('.cerrar-modal');
+                if (closeBtn) { closeBtn.focus(); }
+                // Asegurar que el modal está visible sin scroll
+                modalEl.style.position = 'fixed';
+                modalEl.style.top = '0';
+                modalEl.style.left = '0';
+            }, 50);
+            // attach keyboard handlers for accessibility (ESC to close, focus trap)
+            attachModalKeyHandlers();
+        }
+
+        function actualizarOrdenProductoActual(nuevoOrden) {
+            if (!productoActual) return;
+            if (isNaN(nuevoOrden)) { mostrarToast('Orden inválido'); return; }
+            productoActual.orden = Number(nuevoOrden);
+            const idx = listaProductos.findIndex(p => p.id === productoActual.id);
+            if (idx !== -1) listaProductos[idx].orden = productoActual.orden;
+            // Reordenar vistas: menú de inicio y grid actual si hay uno
+            renderizarMenuInicio();
+            if (document.getElementById('seccion-grid').style.display === 'block') {
+                // Intentar deducir el filtro actual a partir del título en grid
+                const tituloEl = document.querySelector('#grid-productos h2');
+                    if (tituloEl) {
+                    const filtro = tituloEl.innerText.toLowerCase();
+                    cargarCatalogo(filtro, true);
+                }
+            }
+            mostrarToast('Orden actualizado');
+        }
+        
+        function scrollRecomendados(direction) {
+            const container = document.getElementById('grid-recomendados');
+            container.scrollBy({ left: direction * 200, behavior: 'smooth' });
+        }
+
+        // --- UTILS ---
+        function cerrarModal() { document.getElementById('modal-pedido').style.display = 'none'; document.body.classList.remove('modal-open'); }
+
+        // --- Accessibility: focus trap and ESC handler for modal ---
+        let _lastFocusedBeforeModal = null;
+        function attachModalKeyHandlers() {
+            const modal = document.getElementById('modal-pedido');
+            if (!modal) return;
+            _lastFocusedBeforeModal = document.activeElement;
+            function onKey(e) {
+                if (e.key === 'Escape') {
+                    cerrarModal();
+                    removeHandlers();
+                    return;
+                }
+                if (e.key === 'Tab') {
+                    // simple focus trap
+                    const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                    if (!focusable.length) return;
+                    const first = focusable[0];
+                    const last = focusable[focusable.length -1];
+                    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+                }
+            }
+            function removeHandlers() {
+                document.removeEventListener('keydown', onKey);
+            }
+            document.addEventListener('keydown', onKey);
+            // ensure on close we restore focus
+            const origClose = window.cerrarModal;
+            window.cerrarModal = function() {
+                try { removeHandlers(); } catch(e){}
+                if (_lastFocusedBeforeModal) try { _lastFocusedBeforeModal.focus(); } catch(e){}
+                modal.style.display = 'none'; document.body.classList.remove('modal-open');
+            };
+        }
+        
+        function limpiarYValidarCantidad() {
+            if(!productoActual) return;
+            let input = document.getElementById('cantidad-seleccionada');
+            // Eliminar cualquier carácter que no sea número
+            input.value = input.value.replace(/[^0-9]/g, '');
+            let val = parseInt(input.value, 10) || 0;
+            
+            // Si está vacío, dejar que el usuario siga escribiendo
+            if (input.value === '') return;
+            
+            // Validar límites
+            if (val < 1) {
+                input.value = 1;
+                val = 1;
+            }
+            if (val > 1000) {
+                input.value = 1000;
+                val = 1000;
+            }
+            document.getElementById('total-precio').innerText = formatearDinero(val * productoActual.precio);
+        }
+        
+        function cambiarCantidad(cambio) {
+            if(!productoActual) return;
+            let input = document.getElementById('cantidad-seleccionada');
+            let val = parseInt(input.value, 10) || 0;
+            val += cambio;
+            if (val < 1) val = 1;
+            if (val > 1000) val = 1000;
+            input.value = val;
+            document.getElementById('total-precio').innerText = formatearDinero(val * productoActual.precio);
+        }
+        
+        function validarCantidadModal() {
+            if(!productoActual) return;
+            let input = document.getElementById('cantidad-seleccionada');
+            let val = parseInt(input.value, 10);
+            if (isNaN(val) || input.value === '' || val < 1) {
+                input.value = 1;
+                val = 1;
+            }
+            if (val > 1000) {
+                input.value = 1000;
+                val = 1000;
+            }
+            document.getElementById('total-precio').innerText = formatearDinero(val * productoActual.precio);
+        }
+        
+        function soloNumeros(event) {
+            const char = String.fromCharCode(event.which);
+            if (!/[0-9]/.test(char)) {
+                event.preventDefault();
+                return false;
+            }
+            return true;
+        }
+        
+        function enviarWhatsapp() {
+            if(!productoActual) return;
+
+            let variante = "Estándar";
+            const inputManualElem = document.getElementById('input-variante-manual');
+            const hv = document.getElementById('variante-seleccionada-valor');
+            if (inputManualElem) variante = inputManualElem.value;
+            if (hv && hv.value) variante = hv.value;
+
+            if (productoActual.sabores && (!hv || !hv.value)) { mostrarAlertaModal("⚠️ Elige un sabor"); return; }
+
+            // Guardar en carrito para que la factura incluya el producto actual
+            guardarEnCarrito(true);
+
+            // Cerrar el modal antes de abrir el prompt de correo
+            cerrarModal();
+
+            // Lanzar el flujo de factura + WhatsApp
+            setTimeout(() => {
+                abrirPromptCorreo('modal');
+            }, 100);
+        }
+
+        // Toggle favorite (heart) for current modal product
+        function toggleFavorito() {
+            if (!productoActual) return;
+            const hv = document.getElementById('variante-seleccionada-valor');
+            const inputManualElem = document.getElementById('input-variante-manual');
+            const variante = (hv && hv.value) ? hv.value : (inputManualElem ? inputManualElem.value : productoActual.modelo);
+            const icono = document.getElementById('icono-corazon-modal');
+            const existeIndex = carrito.findIndex(item => item.id === productoActual.id && item.variante === variante);
+
+            if (existeIndex === -1) {
+                carrito.push({ id: productoActual.id, cantidad: 1, variante: variante, nombre: productoActual.nombre, precio: productoActual.precio, img: productoActual.img });
+                icono.classList.remove('ph-shopping-cart-simple'); icono.classList.add('ph-shopping-cart'); icono.style.color = 'var(--gold-primary)';
+            } else {
+                carrito.splice(existeIndex, 1);
+                icono.classList.remove('ph-shopping-cart'); icono.classList.add('ph-shopping-cart-simple'); icono.style.color = 'white';
+            }
+            localStorage.setItem('vp_carrito', JSON.stringify(carrito));
+            actualizarBadgeCarrito();
+            renderFloatingCart();
+            // Mantener sincronía si la vista de carrito está abierta
+            syncCarritoViewIfOpen();
+        }
+
+        // Floating cart UI
+        function renderFloatingCart() {
+            const list = document.getElementById('floating-cart-list');
+            if (!list) return;
+            try {
+                list.innerHTML = '';
+                if (carrito.length === 0) {
+                    list.innerHTML = '<p style="padding:12px; color:#bbb">No hay productos en el carrito.</p>';
+                    document.getElementById('floating-total').innerText = formatearDinero(0);
+                    return;
+                }
+                let total = 0;
+                carrito.forEach(it => {
+                    // Validar que el item tenga datos completos
+                    if (!it || !it.nombre || it.precio === undefined) {
+                        console.warn('Item inválido en carrito:', it);
+                        return; // Saltar este item
+                    }
+                    
+                    // Verificar si es producto wax
+                    const productoOriginal = listaProductos.find(p => p.id === it.id);
+                    const esWax = productoOriginal && productoOriginal.categoria === 'wax';
+                    
+                    const cantidad = parseInt(it.cantidad, 10) || 1;
+                    const precio = parseFloat(it.precio) || 0;
+                    // Wax no suma al total
+                    if (!esWax) {
+                        total += cantidad * precio;
+                    }
+                    
+                    // Wax muestra COTIZAR PRECIO
+                    const precioMostrar = esWax ? '<span class="cotizar-precio">COTIZAR PRECIO</span>' : formatearDinero(precio * cantidad);
+                    
+                    const row = document.createElement('div');
+                    row.className = 'floating-cart-item';
+                    row.innerHTML = `
+                        <img src="${it.img || 'img/iconos/wakavapes_icono.webp'}" onerror="this.onerror=null;this.src='img/iconos/wakavapes_icono.webp'" alt="${it.nombre || 'Producto'}">
+                        <div class="fci-info">
+                            <div class="fci-name">${it.nombre || 'Producto'}</div>
+                            <div class="fci-variant">${it.variante || 'Estándar'}</div>
+                            <div class="fci-controls">
+                                <button class="btn-cant" type="button" onclick="event.stopPropagation(); updateItemCantidad(${it.id}, '${encodeURIComponent(it.variante || '')}', -1)"><i class="ph ph-minus"></i></button>
+                                <span class="fci-qty">${cantidad}</span>
+                                <button class="btn-cant" type="button" onclick="event.stopPropagation(); updateItemCantidad(${it.id}, '${encodeURIComponent(it.variante || '')}', 1)"><i class="ph ph-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="fci-right">
+                            <div class="fci-price">${precioMostrar}</div>
+                            <button class="btn-eliminar" onclick="event.stopPropagation(); removeItem(${it.id}, '${encodeURIComponent(it.variante || '')}')" title="Eliminar">
+                                <i class="ph ph-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    list.appendChild(row);
+                });
+                document.getElementById('floating-total').innerText = formatearDinero(total);
+                
+                // If panel was open, ensure it's visible (in case a render caused it to be hidden)
+                const panelEl = document.getElementById('floating-cart-panel');
+                if (panelEl && panelEl.classList.contains('open')) {
+                    panelEl.style.display = 'block';
+                    panelEl.setAttribute('aria-hidden','false');
+                }
+            } catch (e) {
+                console.error('Error renderizando carrito flotante:', e);
+                list.innerHTML = '<p style="padding:12px; color:#f2b84b">Ha ocurrido un error mostrando el carrito. Intenta abrirlo de nuevo.</p>';
+                document.getElementById('floating-total').innerText = formatearDinero(0);
+            }
+        }
+
+        function updateItemCantidad(id, varianteEnc, cambio) {
+            const variante = decodeURIComponent(varianteEnc);
+            const idx = carrito.findIndex(it => it.id === id && it.variante === variante);
+            if (idx === -1) return;
+            let nueva = Number(carrito[idx].cantidad) + Number(cambio);
+            
+            // Si la cantidad llega a 0 o menos, eliminar el producto del carrito
+            if (nueva <= 0) {
+                carrito.splice(idx, 1);
+                localStorage.setItem('vp_carrito', JSON.stringify(carrito));
+                actualizarBadgeCarrito();
+                
+                // Si el carrito quedó vacío, recargar la página para reiniciar todo
+                if (carrito.length === 0) {
+                    mostrarToast('Producto eliminado');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 500);
+                    return;
+                }
+                
+                // Forzar re-render del carrito flotante
+                renderFloatingCart();
+                
+                // Actualizar la vista del carrito en grid si está abierta
+                const gridEl = document.getElementById('seccion-grid');
+                if (gridEl && gridEl.style.display === 'block') {
+                    const contenedor = document.getElementById('grid-productos');
+                    if (contenedor && contenedor.querySelector('.carrito-header-sticky')) {
+                        abrirCarrito(); // Re-renderizar la vista completa del carrito
+                    }
+                }
+                
+                // Actualizar el botón del modal si está abierto con este producto
+                if (productoActual && productoActual.id === id) {
+                    actualizarBotonModal();
+                }
+                
+                mostrarToast('Producto eliminado');
+            } else {
+                carrito[idx].cantidad = nueva;
+                localStorage.setItem('vp_carrito', JSON.stringify(carrito));
+                actualizarBadgeCarrito();
+                renderFloatingCart();
+                
+                // Actualizar la vista del carrito en grid si está abierta
+                const gridEl = document.getElementById('seccion-grid');
+                if (gridEl && gridEl.style.display === 'block') {
+                    const contenedor = document.getElementById('grid-productos');
+                    if (contenedor && contenedor.querySelector('.carrito-header-sticky')) {
+                        abrirCarrito(); // Re-renderizar la vista completa del carrito
+                    }
+                }
+            }
+        }
+
+        function removeItem(id, varianteEnc) {
+            const variante = decodeURIComponent(varianteEnc);
+            carrito = carrito.filter(it => !(it.id === id && it.variante === variante));
+            localStorage.setItem('vp_carrito', JSON.stringify(carrito));
+            actualizarBadgeCarrito();
+            
+            // Si el carrito quedó vacío
+            if (carrito.length === 0) {
+                mostrarToast('Producto eliminado');
+                renderFloatingCart();
+                // Cerrar panel flotante y volver al inicio
+                closeFloatingCart();
+                irAlInicio();
+                return;
+            }
+            
+            // Forzar re-render del carrito flotante
+            renderFloatingCart();
+            
+            // Actualizar el botón del modal si está abierto con este producto
+            if (productoActual && productoActual.id === id) {
+                actualizarBotonModal();
+            }
+            
+            // Actualizar la vista del carrito en grid si está abierta
+            const gridEl = document.getElementById('seccion-grid');
+            if (gridEl && gridEl.style.display === 'block') {
+                const contenedor = document.getElementById('grid-productos');
+                if (contenedor && contenedor.querySelector('.carrito-header-sticky')) {
+                    abrirCarrito(); // Re-renderizar la vista completa del carrito
+                }
+            }
+            
+            mostrarToast('Producto eliminado');
+        }
+
+        function openFloatingCart() {
+            const panel = document.getElementById('floating-cart-panel');
+            if (!panel) return;
+            renderFloatingCart();
+            panel.style.display = 'block';
+            panel.classList.add('open');
+            panel.setAttribute('aria-hidden','false');
+            // focus en el input nombre si existe
+            setTimeout(() => {
+                const nombre = document.getElementById('fc-name');
+                if (nombre) nombre.focus();
+            }, 150);
+        }
+
+        function toggleFloatingCart() {
+            if(carrito.length === 0) {
+                mostrarAlertaModal("Tu carrito está vacío. ¡Agrega productos!");
+                return;
+            }
+            const panel = document.getElementById('floating-cart-panel');
+            if (!panel) return;
+            
+            // Si está visible, cerrarlo
+            if (panel.style.display === 'block' || panel.classList.contains('open')) {
+                closeFloatingCart();
+            } else {
+                // Si está oculto, abrirlo
+                openFloatingCart();
+            }
+        }
+
+        function closeFloatingCart() {
+            const panel = document.getElementById('floating-cart-panel');
+            if (!panel) return;
+            panel.classList.remove('open');
+            panel.setAttribute('aria-hidden','true');
+            // esperar la animación y ocultar
+            setTimeout(() => { panel.style.display = 'none'; }, 220);
+            // devolver foco al botón whatsapp
+            const btn = document.getElementById('whatsapp-floating');
+            if (btn) btn.focus();
+        }
+
+        // Flujo principal: capturar correo y luego enviar pedido completo por WhatsApp
+        function sendWholeOrderWhatsApp() {
+            if (carrito.length === 0) { mostrarAlertaModal('El carrito está vacío'); return; }
+            abrirPromptCorreo('carrito');
+        }
+
+        // Construye mensaje de WhatsApp para el carrito completo
+        function construirMensajeCarrito() {
+            if (carrito.length === 0) { mostrarAlertaModal('El carrito está vacío'); return null; }
+
+            const folio = Math.floor(1000 + Math.random() * 9000);
+            let lines = [];
+            lines.push(`📝 *PEDIDO #${folio}*`);
+            lines.push('');
+
+            let total = 0;
+
+            carrito.forEach((it) => {
+                try {
+                    // Verificar si es producto wax
+                    const productoOriginal = listaProductos.find(p => p.id === it.id);
+                    const esWax = productoOriginal && productoOriginal.categoria === 'wax';
+                    
+                    const subtotal = (parseInt(it.cantidad,10) || 0) * it.precio;
+                    // Wax no suma al total
+                    if (!esWax) {
+                        total += subtotal;
+                    }
+                    // Wax muestra COTIZAR PRECIO en WhatsApp
+                    const precioTexto = esWax ? '_COTIZAR PRECIO_' : formatearDinero(subtotal);
+                    lines.push(`┌─────────────────┐`);
+                    lines.push(`│ ${it.nombre}`);
+                    lines.push(`│ Variante: ${it.variante}`);
+                    lines.push(`│ Cantidad: x${it.cantidad}`);
+                    lines.push(`│ Precio: ${precioTexto}`);
+                    lines.push(`└─────────────────┘`);
+                } catch (e) {
+                    console.warn('Item inválido en carrito:', e, it);
+                }
+            });
+
+            lines.push('');
+            lines.push('───────────────');
+            lines.push(`💰 *TOTAL: ${formatearDinero(total)}*`);
+            lines.push('');
+            lines.push('━━━━━━━━━━━━━━━━━━━━━');
+            lines.push('🏦 *CUENTA PARA TRANSFERENCIA*');
+            lines.push('');
+            lines.push('⚠️ *IMPORTANTE*');
+            lines.push('• Únicamente TRANSFERENCIA');
+            lines.push('• Concepto: solo *PAGO*');
+            lines.push('• NO poner nombres');
+            lines.push('• Si pones otra cosa NO será válido');
+            lines.push('• Depósito en efectivo NO válido');
+            lines.push('');
+            lines.push('🏦 *BANAMEX*');
+            lines.push('DIEGO JEDIAEL ARRIAGA GUTIERREZ');
+            lines.push('CLABE: *002180701940824181*');
+            lines.push('━━━━━━━━━━━━━━━━━━━━━');
+
+            return { mensaje: lines.join('\n'), folio };
+        }
+
+        // Construye mensaje de WhatsApp para el producto del modal
+        function construirMensajeModal() {
+            if (!productoActual) { mostrarAlertaModal('Selecciona un producto.'); return null; }
+
+            const hv = document.getElementById('variante-seleccionada-valor');
+            const inputManualElem = document.getElementById('input-variante-manual');
+            let variante = 'Estándar';
+            if (inputManualElem) variante = inputManualElem.value;
+            if (hv && hv.value) variante = hv.value;
+
+            if (productoActual.sabores && (!hv || !hv.value)) { mostrarAlertaModal('⚠️ Elige un sabor'); return null; }
+
+            const cantidad = parseInt(document.getElementById('cantidad-seleccionada').value, 10) || 1;
+            const pago = document.querySelector('input[name="pago"]:checked').value;
+            const total = cantidad * productoActual.precio;
+            const folio = Math.floor(1000 + Math.random() * 9000);
+
+            let mensaje = `*PEDIDO #${folio}*\n\n`;
+            mensaje += `${productoActual.nombre} (${variante}) x${cantidad} - ${formatearDinero(total)}\n`;
+            mensaje += `\n💳 Pago: ${pago}\n`;
+            
+            // Si es transferencia, agregar datos bancarios
+            if (pago === 'Transferencia') {
+                mensaje += `\n━━━━━━━━━━━━━━━━━━━━━`;
+                mensaje += `\n🏦 *CUENTA PARA TRANSFERENCIA*\n`;
+                mensaje += `\n⚠️ *IMPORTANTE*\n`;
+                mensaje += `• Únicamente TRANSFERENCIA\n`;
+                mensaje += `• Concepto: solo *PAGO*\n`;
+                mensaje += `• NO poner nombres\n`;
+                mensaje += `• Si pones otra cosa NO será válido\n`;
+                mensaje += `• Depósito en efectivo NO válido\n`;
+                mensaje += `\n🏦 *BANAMEX*\n`;
+                mensaje += `DIEGO JEDIAEL ARRIAGA GUTIERREZ\n`;
+                mensaje += `CLABE: *002180701940824181*\n`;
+                mensaje += `━━━━━━━━━━━━━━━━━━━━━`;
+            }
+            
+            mensaje += `\n*Total: ${formatearDinero(total)}*`;
+
+            return { mensaje, folio };
+        }
+
+        // Construye HTML para la factura del modal (un solo producto)
+        function generarFacturaModalHTML(folio) {
+            if (!productoActual) return { html: '', total: 0 };
+
+            const hv = document.getElementById('variante-seleccionada-valor');
+            const inputManualElem = document.getElementById('input-variante-manual');
+            let variante = 'Estándar';
+            if (inputManualElem) variante = inputManualElem.value;
+            if (hv && hv.value) variante = hv.value;
+
+            const cantidad = parseInt(document.getElementById('cantidad-seleccionada').value, 10) || 1;
+            const total = cantidad * productoActual.precio;
+
+            const html = `
+                <div style="font-family: Arial, sans-serif; color:#222;">
+                    <h2 style="margin:0 0 12px 0;">Factura / Pedido #${folio}</h2>
+                    <div style="margin-bottom:12px;"><h4 style="margin:0 0 6px 0;">Productos</h4><ul style="padding-left:18px;"><li><strong>${productoActual.nombre}</strong> (${variante}) x${cantidad}: ${formatearDinero(total)}</li></ul></div>
+                    <hr style="border:none; border-top:1px solid #ddd; margin:12px 0;">
+                    <p style="margin:0; font-size:1.05rem;">Total: <strong>${formatearDinero(total)}</strong></p>
+                    <div style="background:#fff3cd; border:2px solid #ffc107; border-radius:8px; padding:16px; margin-top:20px;">
+                        <h3 style="margin:0 0 10px 0; color:#856404; font-size:1.1rem;">🏦 Cuenta para Transferencia</h3>
+                        <div style="background:#fff8e1; border-radius:6px; padding:12px; margin-bottom:12px;">
+                            <p style="margin:0 0 8px 0; color:#d32f2f; font-weight:bold; font-size:0.95rem;">⚠️ IMPORTANTE:</p>
+                            <ul style="margin:0; padding-left:18px; font-size:0.9rem; color:#555;">
+                                <li>Únicamente TRANSFERENCIA</li>
+                                <li>Concepto: solo <strong>PAGO</strong></li>
+                                <li>NO poner nombres</li>
+                                <li>Si pones otra cosa NO será válido el pago</li>
+                                <li style="color:#d32f2f;">Depósito en efectivo NO SE HARÁ VÁLIDO</li>
+                            </ul>
+                        </div>
+                        <p style="margin:6px 0; font-size:1rem;"><strong>🏦 BANAMEX</strong></p>
+                        <p style="margin:6px 0; font-size:0.95rem;"><strong>Titular:</strong> DIEGO JEDIAEL ARRIAGA GUTIERREZ</p>
+                        <p style="margin:6px 0; font-size:0.95rem;"><strong>CLABE:</strong> <span style="font-family:monospace; background:#f5f5f5; padding:2px 6px; border-radius:4px;">002180701940824181</span></p>
+                    </div>
+                </div>`;
+
+            return { html, total };
+        }
+
+        // Construye HTML para la factura a enviar por email
+        function generarFacturaHTML(folio) {
+            let total = 0;
+            let productosHTML = [];
+
+            carrito.forEach((it) => {
+                // Verificar si es producto wax
+                const productoOriginal = listaProductos.find(p => p.id === it.id);
+                const esWax = productoOriginal && productoOriginal.categoria === 'wax';
+                
+                const subtotal = (parseInt(it.cantidad,10) || 0) * it.precio;
+                // Wax no suma al total
+                if (!esWax) {
+                    total += subtotal;
+                }
+                // Mostrar COTIZAR PRECIO para wax, precio normal para otros
+                const precioTexto = esWax ? '<strong style="color:#f57c00;">COTIZAR PRECIO</strong>' : formatearDinero(subtotal);
+                productosHTML.push(`<li><strong>${it.nombre}</strong> (${it.variante}) x${it.cantidad}: ${precioTexto}</li>`);
+            });
+
+            const html = `
+                <div style="font-family: Arial, sans-serif; color:#222;">
+                    <h2 style="margin:0 0 12px 0;">Factura / Pedido #${folio}</h2>
+                    <div style="margin-bottom:12px;"><h4 style="margin:0 0 6px 0;">Productos</h4><ul style="padding-left:18px;">${productosHTML.join('')}</ul></div>
+                    <hr style="border:none; border-top:1px solid #ddd; margin:12px 0;">
+                    <p style="margin:0; font-size:1.05rem;">Total: <strong>${formatearDinero(total)}</strong></p>
+                    <div style="background:#fff3cd; border:2px solid #ffc107; border-radius:8px; padding:16px; margin-top:20px;">
+                        <h3 style="margin:0 0 10px 0; color:#856404; font-size:1.1rem;">🏦 Cuenta para Transferencia</h3>
+                        <div style="background:#fff8e1; border-radius:6px; padding:12px; margin-bottom:12px;">
+                            <p style="margin:0 0 8px 0; color:#d32f2f; font-weight:bold; font-size:0.95rem;">⚠️ IMPORTANTE:</p>
+                            <ul style="margin:0; padding-left:18px; font-size:0.9rem; color:#555;">
+                                <li>Únicamente TRANSFERENCIA</li>
+                                <li>Concepto: solo <strong>PAGO</strong></li>
+                                <li>NO poner nombres</li>
+                                <li>Si pones otra cosa NO será válido el pago</li>
+                                <li style="color:#d32f2f;">Depósito en efectivo NO SE HARÁ VÁLIDO</li>
+                            </ul>
+                        </div>
+                        <p style="margin:6px 0; font-size:1rem;"><strong>🏦 BANAMEX</strong></p>
+                        <p style="margin:6px 0; font-size:0.95rem;"><strong>Titular:</strong> DIEGO JEDIAEL ARRIAGA GUTIERREZ</p>
+                        <p style="margin:6px 0; font-size:0.95rem;"><strong>CLABE:</strong> <span style="font-family:monospace; background:#f5f5f5; padding:2px 6px; border-radius:4px;">002180701940824181</span></p>
+                    </div>
+                </div>`;
+
+            return { html, total };
+        }
+
+        // Envía la factura por email usando Apps Script
+        async function enviarFacturaPorCorreo(correoCliente, folio, action) {
+            if (!correoCliente) throw new Error('EMAIL_REQUERIDO');
+            if (carrito.length === 0) throw new Error('CARRITO_VACIO');
+
+            const ahora = Date.now();
+            if (ahora < _emailCooldownUntil) throw new Error('COOLDOWN');
+
+            const { html } = action === 'modal' ? generarFacturaModalHTML(folio) : generarFacturaHTML(folio);
+            const payload = {
+                to: correoCliente,
+                cc: EMAIL_CC,
+                subject: `Factura pedido #${folio}`,
+                body: html
+            };
+
+            console.log('📧 Enviando factura al endpoint:', EMAIL_ENDPOINT);
+            console.log('📦 Payload:', payload);
+
+            try {
+                const resp = await fetch(EMAIL_ENDPOINT, {
+                    method: 'POST',
+                    mode: 'no-cors', // Importante para Apps Script
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                console.log('✅ Respuesta recibida:', resp);
+                
+                // Con no-cors no podemos leer la respuesta, asumimos éxito si no hay error
+                _emailCooldownUntil = ahora + EMAIL_COOLDOWN_MS;
+                return true;
+            } catch (error) {
+                console.error('❌ Error al enviar factura:', error);
+                throw new Error('ENVIO_FALLIDO');
+            }
+        }
+
+        // Orquesta el flujo: factura -> WhatsApp
+        async function procesarAccionConCorreo(correoCliente, action) {
+            if (!action) { mostrarAlertaModal('No se pudo iniciar el envío. Intenta de nuevo.'); return; }
+
+            const build = action === 'carrito' ? construirMensajeCarrito() : construirMensajeModal();
+            if (!build) { return; }
+
+            const { mensaje, folio } = build;
+
+            try {
+                mostrarToast('Enviando factura...');
+                await enviarFacturaPorCorreo(correoCliente, folio, action);
+                mostrarToast('Factura enviada. Abriendo WhatsApp...');
+                const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(mensaje)}`;
+                // Usar location.href para mejor compatibilidad con móviles
+                setTimeout(() => { window.location.href = url; }, 500);
+            } catch (err) {
+                console.error('procesarAccionConCorreo', err);
+                if (err && err.message === 'COOLDOWN') {
+                    mostrarToast('Espera unos segundos antes de reenviar la factura.');
+                } else if (err && err.message === 'CARRITO_VACIO') {
+                    mostrarAlertaModal('Tu carrito está vacío.');
+                    return;
+                } else {
+                    mostrarToast('No pudimos confirmar el envío de la factura. Abriremos WhatsApp igual.');
+                }
+
+                // Fallback: abrir WhatsApp aunque el correo falle, para no bloquear la compra
+                try {
+                    const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(mensaje)}`;
+                    setTimeout(() => { window.location.href = url; }, 500);
+                } catch (openErr) {
+                    console.error('No se pudo abrir WhatsApp tras error de factura', openErr);
+                    mostrarAlertaModal('No se pudo abrir WhatsApp. Intenta nuevamente.');
+                }
+            } finally {
+                _pendingAction = null;
+            }
+        }
+
+        window.onload = function() { cargarCarritoDelStorage(); iniciarTicker(); renderizarMenuInicio(); actualizarBadgeCarrito(); };
+    </script>
+</body>
+</html>
