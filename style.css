@@ -339,6 +339,10 @@ nav,nav * { user-select:none }
   width:100%; max-width:500px; padding:0 25px; margin-top:25px;
 }
 
+.landing-grid-3 {
+  max-width:700px; flex-wrap:wrap; gap:25px;
+}
+
 .landing-card {
   position:relative; border-radius:var(--r-lg); overflow:hidden; cursor:pointer;
   background:var(--surface-card); border:2px solid rgba(100,170,230,0.2);
@@ -599,6 +603,15 @@ header {
   text-transform:uppercase; background:rgba(58,143,212,0.1);
   padding:6px 12px; border-radius:var(--r-sm); border:1px solid rgba(58,143,212,0.35);
 }
+
+/* Descripción breve para categorías simples (audífonos, pulseras) */
+.descripcion-card {
+  color:var(--text-secondary); font-size:0.82rem; line-height:1.35;
+  margin:6px 0 2px; padding:0 4px;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.tarjeta-producto .info-card-desc { height:auto; min-height:185px }
 
 .texto-ver-detalles {
   display:inline-block; color:var(--text-secondary); font-size:0.75rem;
@@ -1440,6 +1453,9 @@ footer {
   .landing-header { padding:5px 15px 8px }
   .landing-grid { gap:20px; padding:0 15px; margin-top:15px }
   .landing-card { width:155px; height:250px; border-radius:14px }
+  .landing-grid-3 { gap:14px }
+  .landing-grid-3 .landing-card { width:104px; height:190px; border-radius:12px }
+  .landing-grid-3 .landing-card-content h3 { font-size:0.62rem }
   .landing-card-content { padding:15px 10px }
   .landing-card-content h3 { font-size:0.75rem }
 

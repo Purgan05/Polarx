@@ -1,0 +1,30 @@
+IMÁGENES PENDIENTES POR SUBIR — Polarx
+==========================================
+
+Esta carpeta contiene solo la estructura. Debes subir tus propias imágenes
+con estos nombres EXACTOS (o cambiar las rutas en index.html / vapes.js /
+audifonos.js / pulseras.js si usas otros nombres).
+
+img/iconos/
+  - polarx_icono.webp     -> Favicon / ícono de respaldo cuando una imagen falla
+  - polarxlogo.webp       -> Logo principal que aparece en la portada
+
+img/vapes/
+  - portada_vapes.jpg     -> Imagen de portada usada en la tarjeta y banner de Vapes
+  - (luego, una imagen por cada producto que agregues en vapes.js)
+
+img/audifonos/
+  - portada_audifonos.jpg -> Imagen de portada para la tarjeta y banner de Audífonos
+  - (luego, una imagen por cada producto que agregues en audifonos.js)
+
+img/pulseras/
+  - portada_pulseras.jpg  -> Imagen de portada para la tarjeta y banner de Pulseras
+  - (luego, una imagen por cada producto que agregues en pulseras.js)
+
+Notas:
+- Si una imagen no carga, el sitio automáticamente muestra
+  img/iconos/polarx_icono.webp como respaldo, así que el sitio no se rompe
+  visualmente mientras subes el resto del contenido.
+- Los archivos vapes.js, audifonos.js y pulseras.js tienen 10-20 productos
+  "placeholder" (nombre genérico, precio en $0) listos para que reemplaces
+  con tus productos reales.

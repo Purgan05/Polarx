@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Mayorista Vapes, Envíos a todo México. Los mejores precios en vapes al mayoreo.">
-    <title>Waka Vapes|Mayoristas Vapes </title>
+    <meta name="description" content="Mayorista Vapes, Audífonos y Pulseras. Envíos a todo México. Los mejores precios al mayoreo.">
+    <title>Polarx | Mayoristas</title>
     <!-- redeploy -->
     
     <!-- Favicon (Logo en la pestaña del navegador) -->
-    <link rel="icon" type="image/png" href="img/iconos/wakavapes_icono.webp">
-    <link rel="shortcut icon" type="image/png" href="img/iconos/wakavapes_icono.webp">
-    <link rel="apple-touch-icon" href="img/iconos/wakavapes_icono.webp">
+    <link rel="icon" type="image/png" href="img/iconos/polarx_icono.webp">
+    <link rel="shortcut icon" type="image/png" href="img/iconos/polarx_icono.webp">
+    <link rel="apple-touch-icon" href="img/iconos/polarx_icono.webp">
     
     <!-- Seguridad HTTPS -->
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
@@ -25,7 +25,7 @@
     
     <!-- Preload recursos críticos para LCP -->
     <link rel="preload" href="style.css?v=2" as="style">
-    <link rel="preload" href="img/iconos/wakalogo.webp" as="image" type="image/webp">
+    <link rel="preload" href="img/iconos/polarxlogo.webp" as="image" type="image/webp">
     
     <!-- CSS crítico inline para primer render (evita FOUC) -->
     <style>
@@ -124,14 +124,14 @@
         <div class="landing-container">
             <!-- Logo y título -->
             <div class="landing-header">
-                <img src="img/iconos/wakalogo.webp" alt="Logo Waka Vapes" class="landing-logo" fetchpriority="high" decoding="async">
-                <h1 class="landing-titulo">waka vapes</h1>
+                <img src="img/iconos/polarxlogo.webp" alt="Logo Polarx" class="landing-logo" fetchpriority="high" decoding="async">
+                <h1 class="landing-titulo">polarx</h1>
                 <div class="landing-separador"></div>
                 <p class="landing-slogan">CALIDAD & PRECIOS BAJOS</p>
             </div>
 
             <!-- Tarjetas de categorías estilo AzLeon -->
-            <div class="landing-grid" id="contenedor-categorias-dinamico">
+            <div class="landing-grid landing-grid-3" id="contenedor-categorias-dinamico">
                 <!-- Tarjeta VAPES -->
                 <div class="landing-card" onclick="mostrarCatalogoCompleto()">
                     <div class="landing-card-image">
@@ -144,14 +144,26 @@
                     </div>
                 </div>
 
-                <!-- Tarjeta WAX -->
-                <div class="landing-card" onclick="mostrarCatalogoWax()">
+                <!-- Tarjeta AUDÍFONOS -->
+                <div class="landing-card" onclick="mostrarCatalogoAudifonos()">
                     <div class="landing-card-image">
-                        <img src="img/wax/portada_wax.webp" alt="Wax Mayoreo" loading="lazy" decoding="async">
+                        <img src="img/audifonos/portada_audifonos.jpg" alt="Audífonos Mayoreo" loading="lazy" decoding="async">
                         <div class="landing-card-overlay"></div>
                     </div>
                     <div class="landing-card-content">
-                        <h3>¡WAX<br>MAYOREO!</h3>
+                        <h3>¡AUDÍFONOS<br>MAYOREO!</h3>
+                        <span class="landing-card-arrow">→</span>
+                    </div>
+                </div>
+
+                <!-- Tarjeta PULSERAS -->
+                <div class="landing-card" onclick="mostrarCatalogoPulseras()">
+                    <div class="landing-card-image">
+                        <img src="img/pulseras/portada_pulseras.jpg" alt="Pulseras Mayoreo" loading="lazy" decoding="async">
+                        <div class="landing-card-overlay"></div>
+                    </div>
+                    <div class="landing-card-content">
+                        <h3>¡PULSERAS<br>MAYOREO!</h3>
                         <span class="landing-card-arrow">→</span>
                     </div>
                 </div>
@@ -170,7 +182,7 @@
                 <div class="promo-content">
                     <h2>¡VAPES!</h2>
                     <h3>¿Por qué elegirnos?</h3>
-                    <p>Manejamos productos oficiales, y los mejores precios de vapes en todo mexico, somos mayoristas de vapes confiables.</p>
+                    <p>Manejamos productos oficiales, y los mejores precios de vapes en todo México, somos mayoristas de vapes confiables.</p>
                     <p>Vapes baratos, entra y disfruta de nuestro catálago con precios accesibles.</p>
                     <p>Te ayudamos a que emprendas tu negocio con bajo presupuesto.</p>
                     <p class="promo-highlight">"Manejamos los mejores precios en mayoreo, entregas seguras hasta la puerta de tu casa"</p>
@@ -178,17 +190,31 @@
                 </div>
             </div>
 
-            <!-- Bloque WAX -->
+            <!-- Bloque AUDÍFONOS -->
             <div class="promo-block promo-block-reverse">
                 <div class="promo-image">
-                    <img src="img/wax/portada_wax.webp" alt="Wax Mayoreo" loading="lazy" decoding="async">
+                    <img src="img/audifonos/portada_audifonos.jpg" alt="Audífonos Mayoreo" loading="lazy" decoding="async">
                 </div>
                 <div class="promo-content">
-                    <h2>¡PRODUCTOS WAX!</h2>
-                    <h3>Variedad de wax</h3>
-                    <p>Manejamos mieles importadas, puedes preguntar y cotizar por nuestros productos en privado.</p>
-                    <p>Queremos darte lo mejor para ti y los mejores precios, ¡cotiza ya!.</p>
-                    <button class="promo-btn" onclick="mostrarCatalogoWax()">WAX</button>
+                    <h2>¡AUDÍFONOS!</h2>
+                    <h3>Sonido de calidad al mejor precio</h3>
+                    <p>Manejamos audífonos de las mejores marcas, ideales para revender o para uso personal.</p>
+                    <p>Precios de mayoreo pensados para que tu negocio crezca.</p>
+                    <button class="promo-btn" onclick="mostrarCatalogoAudifonos()">AUDÍFONOS</button>
+                </div>
+            </div>
+
+            <!-- Bloque PULSERAS -->
+            <div class="promo-block">
+                <div class="promo-image">
+                    <img src="img/pulseras/portada_pulseras.jpg" alt="Pulseras Mayoreo" loading="lazy" decoding="async">
+                </div>
+                <div class="promo-content">
+                    <h2>¡PULSERAS!</h2>
+                    <h3>Variedad de estilos</h3>
+                    <p>Pulseras de moda con diseños variados, perfectas para complementar tu catálogo.</p>
+                    <p>Calidad garantizada y los mejores precios en mayoreo.</p>
+                    <button class="promo-btn" onclick="mostrarCatalogoPulseras()">PULSERAS</button>
                 </div>
             </div>
         </div>
@@ -329,8 +355,8 @@
     </div>
 
     <footer>
-        <p class="footer-logo">WAKA VAPES</p>
-        <p class="copyright">© 2025 Waka Vapes - Todos los derechos reservados</p>
+        <p class="footer-logo">POLARX</p>
+        <p class="copyright">© 2025 Polarx - Todos los derechos reservados</p>
     </footer>
 
     <!-- =================================================================
@@ -338,12 +364,15 @@
          ================================================================= -->
     <!-- Productos separados en archivos externos para fácil edición -->
     <script src="vapes.js"></script>
-    <script src="wax.js"></script>
+    <script src="audifonos.js"></script>
+    <script src="pulseras.js"></script>
     <script>
-        // Combinar las listas de productos (vapes + wax)
-        // Agregar productos wax a la lista principal
-        if (typeof listaProductosWax !== 'undefined') {
-            listaProductosWax.forEach(p => listaProductos.push(p));
+        // Combinar las listas de productos (vapes + audífonos + pulseras)
+        if (typeof listaProductosAudifonos !== 'undefined') {
+            listaProductosAudifonos.forEach(p => listaProductos.push(p));
+        }
+        if (typeof listaProductosPulseras !== 'undefined') {
+            listaProductosPulseras.forEach(p => listaProductos.push(p));
         }
     </script>
     <script>
@@ -351,13 +380,18 @@
             return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(cantidad);
         };
 
+        // Categorías "simples": sin sabores/variantes, sin modal de pedido.
+        // Solo muestran Título, Precio y una breve descripción.
+        const CATEGORIAS_SIMPLES = ['audifonos', 'pulseras'];
+        const esCategoriaSimple = (categoria) => CATEGORIAS_SIMPLES.includes(categoria);
+
         // TICKER: mensajes y tiempo de rotación (necesarios para iniciarTicker)
         const MENSAJES_TICKER = [
             'Los precios mas bajos del mercado',
             'Precios de remate ',
             '⚡ Aprovecha ya, compra ahora ⚡',
             'Pedidos al <span class="ticker-phone">+52 1 56 3167 6303</span> 📞',
-            ' Waka Vapes 👑'
+            ' Polarx 👑'
         ];
         const TIEMPO_ROTACION = 4000; // ms
 
@@ -392,7 +426,7 @@
         const CONFIG_SECCIONES = [
             {
                 id: 'vapes',
-                titulo: 'Catálogo Waka Vapes',
+                titulo: 'Catálogo Polarx',
                 subtitulo: 'Todas nuestras variedades disponibles',
                 img: 'img/vapes/portada_vapes.jpg',
                 disponible: true,
@@ -400,13 +434,22 @@
                 orden: 1
             },
             {
-                id: 'wax',
-                titulo: 'Catálogo Wax',
-                subtitulo: 'Los mejores concentrados',
-                img: 'img/wax/portada_wax.webp',
+                id: 'audifonos',
+                titulo: 'Catálogo Audífonos',
+                subtitulo: 'Sonido de calidad al mejor precio',
+                img: 'img/audifonos/portada_audifonos.jpg',
                 disponible: true,
                 visible: true,
                 orden: 2
+            },
+            {
+                id: 'pulseras',
+                titulo: 'Catálogo Pulseras',
+                subtitulo: 'Variedad de estilos para tu negocio',
+                img: 'img/pulseras/portada_pulseras.jpg',
+                disponible: true,
+                visible: true,
+                orden: 3
             }
         ];
 
@@ -774,20 +817,19 @@
                     return; // Saltar este item
                 }
                 
-                // Verificar si es producto wax
+                // Verificar si es producto de categoría simple (audífonos/pulseras)
                 const productoOriginal = listaProductos.find(p => p.id === item.id);
-                const esWax = productoOriginal && productoOriginal.categoria === 'wax';
+                const esSimple = productoOriginal && esCategoriaSimple(productoOriginal.categoria);
                 
                 const cantidad = parseInt(item.cantidad, 10) || 1;
                 const precio = parseFloat(item.precio) || 0;
                 
-                // Wax muestra COTIZAR PRECIO
-                const precioMostrar = esWax ? '<span class="cotizar-precio">COTIZAR PRECIO</span>' : formatearDinero(precio * cantidad);
+                const precioMostrar = formatearDinero(precio * cantidad);
                 
                 const tarjeta = document.createElement('div');
                 tarjeta.className = 'tarjeta-producto';
                 tarjeta.innerHTML = `
-                    <div class="img-wrapper"><img src="${item.img || 'img/iconos/wakavapes_icono.webp'}" alt="${item.nombre || 'Producto'}" onerror="this.onerror=null;this.src='img/iconos/wakavapes_icono.webp'"></div>
+                    <div class="img-wrapper"><img src="${item.img || 'img/iconos/polarx_icono.webp'}" alt="${item.nombre || 'Producto'}" onerror="this.onerror=null;this.src='img/iconos/polarx_icono.webp'"></div>
                     <div class="info-card carrito-card-info">
                         <h3>${item.nombre || 'Producto'}</h3>
                         <p class="variante-text">${item.variante || 'Estándar'}</p>
@@ -799,8 +841,8 @@
                         <p class="subtotal-text">${precioMostrar}</p>
                     </div>
                 `;
-                // Wax no abre modal
-                if (!esWax) {
+                // Categorías simples no abren modal
+                if (!esSimple) {
                     tarjeta.onclick = function() { abrirModal(item.id); };
                     tarjeta.style.cursor = 'pointer';
                 } else {
@@ -848,7 +890,7 @@
                 if (!prod.activo) continue;
                 if (!seccionesValidas.has(prod.categoria)) continue;
                 const nombreLower = prod.nombre.toLowerCase();
-                const modeloLower = prod.modelo.toLowerCase();
+                const modeloLower = (prod.modelo || '').toLowerCase();
                 if (nombreLower.includes(filtro) || modeloLower.includes(filtro)) {
                     coincidencias.push(prod);
                 }
@@ -860,7 +902,7 @@
                 
                 coincidencias.forEach(prod => {
                     const item = document.createElement('div');
-                    const esWax = prod.categoria === 'wax';
+                    const esSimple = esCategoriaSimple(prod.categoria);
                     item.className = 'resultado-item' + (prod.agotado ? ' resultado-agotado' : '');
                     
                     // Crear elementos en lugar de usar innerHTML para mejor rendimiento
@@ -869,7 +911,7 @@
                     img.loading = 'lazy';
                     img.decoding = 'async';
                     img.style.cssText = `width:36px;height:36px;object-fit:cover;border-radius:5px;margin-right:8px;${prod.agotado ? 'filter:grayscale(100%);opacity:0.6;' : ''}`;
-                    img.onerror = function() { this.src = 'img/iconos/wakavapes_icono.webp'; };
+                    img.onerror = function() { this.src = 'img/iconos/polarx_icono.webp'; };
                     
                     const infoDiv = document.createElement('div');
                     infoDiv.className = 'info-busqueda';
@@ -880,7 +922,7 @@
                     
                     const modeloSpan = document.createElement('span');
                     modeloSpan.className = 'modelo-busqueda';
-                    modeloSpan.textContent = prod.modelo;
+                    modeloSpan.textContent = prod.modelo || formatearDinero(prod.precio);
                     
                     infoDiv.appendChild(nombreSpan);
                     infoDiv.appendChild(modeloSpan);
@@ -888,13 +930,6 @@
                     item.appendChild(img);
                     item.appendChild(infoDiv);
                     
-                    // Badges
-                    if (esWax && !prod.agotado) {
-                        const badgeCotizar = document.createElement('span');
-                        badgeCotizar.className = 'badge-cotizar-busqueda';
-                        badgeCotizar.textContent = 'COTIZAR';
-                        item.appendChild(badgeCotizar);
-                    }
                     if (prod.agotado) {
                         const badgeAgotado = document.createElement('span');
                         badgeAgotado.className = 'badge-agotado-busqueda';
@@ -909,7 +944,7 @@
                             input.value = '';
                             resultadosDiv.style.display = 'none';
                             resultadosDiv.innerHTML = '';
-                            irASeccionYResaltar(prod.id, prod.categoria, !esWax);
+                            irASeccionYResaltar(prod.id, prod.categoria, !esSimple);
                         };
                     }
                     
@@ -968,7 +1003,7 @@
                 
                 const resultados = listaProductos.filter(prod => {
                     if (!prod.activo) return false;
-                    if (!prod.nombre.toLowerCase().includes(texto) && !prod.modelo.toLowerCase().includes(texto)) return false;
+                    if (!prod.nombre.toLowerCase().includes(texto) && !(prod.modelo || '').toLowerCase().includes(texto)) return false;
                     const seccionCategoria = CONFIG_SECCIONES.find(s => s.id === prod.categoria);
                     if (!seccionCategoria) return false;
                     return seccionCategoria.visible === true && seccionCategoria.disponible === true;
@@ -997,55 +1032,43 @@
             }
         });
 
+        // Mapa de etiquetas e íconos por categoría para las tarjetas de inicio
+        const ETIQUETAS_CATEGORIA = {
+            vapes:     { titulo: 'VAPES',     etiqueta: 'MAYOREO', alt: 'Vapes Mayoreo',     accion: () => mostrarCatalogoCompleto() },
+            audifonos: { titulo: 'AUDÍFONOS', etiqueta: 'MAYOREO', alt: 'Audífonos Mayoreo', accion: () => mostrarCatalogoAudifonos() },
+            pulseras:  { titulo: 'PULSERAS',  etiqueta: 'MAYOREO', alt: 'Pulseras Mayoreo',  accion: () => mostrarCatalogoPulseras() }
+        };
+
         function renderizarMenuInicio() {
             const cont = document.getElementById('contenedor-categorias-dinamico');
             cont.innerHTML = '';
-            
-            // Obtener la configuración de la sección de vapes
-            const seccionVapes = CONFIG_SECCIONES.find(s => s.id === 'vapes');
-            const imgPortadaVapes = seccionVapes ? seccionVapes.img : 'img/vapes/portada_vapes.jpg';
-            
-            // Crear la tarjeta de vapes con nuevo estilo
-            const divVapes = document.createElement('div');
-            divVapes.className = 'landing-card';
-            divVapes.style.animationDelay = '0.1s';
-            divVapes.onclick = () => mostrarCatalogoCompleto();
-            
-            divVapes.innerHTML = `
-                <div class="landing-card-image">
-                    <img src="${imgPortadaVapes}" alt="Vapes Mayoreo" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/wakavapes_icono.webp'">
-                    <div class="landing-card-overlay"></div>
-                </div>
-                <div class="landing-card-content">
-                    <h3>¡VAPES<br>MAYOREO!</h3>
-                    <span class="landing-card-arrow">→</span>
-                </div>
-            `;
-            cont.appendChild(divVapes);
-            
-            // Obtener la configuración de la sección de wax
-            const seccionWax = CONFIG_SECCIONES.find(s => s.id === 'wax');
-            if (seccionWax && seccionWax.visible && seccionWax.disponible) {
-                const imgPortadaWax = seccionWax.img || 'img/wax/portada_wax.webp';
-                
-                // Crear la tarjeta de wax con nuevo estilo
-                const divWax = document.createElement('div');
-                divWax.className = 'landing-card';
-                divWax.style.animationDelay = '0.2s';
-                divWax.onclick = () => mostrarCatalogoWax();
-                
-                divWax.innerHTML = `
+
+            // Generar una tarjeta por cada sección visible/disponible, en orden
+            const secciones = CONFIG_SECCIONES
+                .filter(s => s.visible && s.disponible)
+                .sort((a, b) => a.orden - b.orden);
+
+            secciones.forEach((seccion, idx) => {
+                const etiqueta = ETIQUETAS_CATEGORIA[seccion.id];
+                if (!etiqueta) return;
+
+                const card = document.createElement('div');
+                card.className = 'landing-card';
+                card.style.animationDelay = `${0.1 + idx * 0.1}s`;
+                card.onclick = etiqueta.accion;
+
+                card.innerHTML = `
                     <div class="landing-card-image">
-                        <img src="${imgPortadaWax}" alt="Wax Mayoreo" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/wakavapes_icono.webp'">
+                        <img src="${seccion.img}" alt="${etiqueta.alt}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/polarx_icono.webp'">
                         <div class="landing-card-overlay"></div>
                     </div>
                     <div class="landing-card-content">
-                        <h3>¡WAX<br>MAYOREO!</h3>
+                        <h3>¡${etiqueta.titulo}<br>${etiqueta.etiqueta}!</h3>
                         <span class="landing-card-arrow">→</span>
                     </div>
                 `;
-                cont.appendChild(divWax);
-            }
+                cont.appendChild(card);
+            });
         }
 
         function cargarCatalogo(filtro) {
@@ -1090,7 +1113,7 @@
             lista.forEach((prod, idx) => {
                 const tarjeta = document.createElement('div');
                 const estaAgotado = prod.agotado === true;
-                const esWax = prod.categoria === 'wax';
+                const esSimple = esCategoriaSimple(prod.categoria);
                 tarjeta.className = 'tarjeta-producto' + (estaAgotado ? ' producto-agotado' : '');
                 tarjeta.setAttribute('data-product-id', prod.id);
                 // Agregar un delay mínimo escalonado (max 8 productos con delay)
@@ -1098,18 +1121,20 @@
                     tarjeta.style.animationDelay = `${idx * 0.05}s`;
                 }
                 
-                // Wax no abre modal, solo permite agregar al carrito
-                if (!esWax) {
+                // Categorías simples (audífonos/pulseras) no abren modal, solo permiten agregar al carrito
+                if (!esSimple) {
                     tarjeta.onclick = () => { if (!estaAgotado) abrirModal(prod.id); };
                     tarjeta.style.cursor = estaAgotado ? 'not-allowed' : 'pointer';
                 } else {
                     tarjeta.style.cursor = 'default';
                 }
                 
-                // Wax muestra COTIZAR PRECIO en lugar del precio
-                const prec = esWax 
-                    ? `<div class="bloque-precios"><span class="precio-card cotizar-precio">COTIZAR PRECIO</span></div>`
-                    : `<div class="bloque-precios"><span class="precio-card">${formatearDinero(prod.precio)}</span></div>`;
+                const prec = `<div class="bloque-precios"><span class="precio-card">${formatearDinero(prod.precio)}</span></div>`;
+
+                // Descripción breve, solo para categorías simples
+                const descripcionHTML = (esSimple && prod.descripcion)
+                    ? `<p class="descripcion-card">${prod.descripcion}</p>`
+                    : '';
                 
                 // Controles rápidos
                 let controlesRapidos = '';
@@ -1119,16 +1144,16 @@
                 if (estaAgotado) {
                     controlesRapidos = `<span class="badge-agotado">AGOTADO</span>`;
                 } else if (enCarritoItem) {
-                    controlesRapidos = esWax 
+                    controlesRapidos = esSimple 
                         ? `<button class="btn-agregar-card agregado" onclick="event.stopPropagation();" title="En carrito"><i class="ph ph-check-circle"></i></button>`
                         : `<button class="btn-agregar-card agregado" onclick="event.stopPropagation(); abrirModal(${prod.id})" title="En carrito"><i class="ph ph-check-circle"></i></button>`;
                 } else {
                     controlesRapidos = `<button class="btn-agregar-card" onclick="event.stopPropagation(); agregarAlCarritoRapido(${prod.id})" title="Agregar"><i class="ph ph-shopping-cart"></i></button>`;
                 }
 
-                const verDetalles = (!estaAgotado && !esWax) ? '<span class="texto-ver-detalles">Ver Detalles</span>' : '';
+                const verDetalles = (!estaAgotado && !esSimple) ? '<span class="texto-ver-detalles">Ver Detalles</span>' : '';
                 
-                tarjeta.innerHTML = `<div class="img-wrapper"><img src="${prod.img}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/wakavapes_icono.webp'"></div><div class="info-card"><h3>${prod.nombre}</h3>${prec}<div style="display:flex;gap:8px;justify-content:center;align-items:center;margin-top:10px">${controlesRapidos}${verDetalles}</div></div>`;
+                tarjeta.innerHTML = `<div class="img-wrapper"><img src="${prod.img}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/polarx_icono.webp'"></div><div class="info-card${descripcionHTML ? ' info-card-desc' : ''}"><h3>${prod.nombre}</h3>${prec}${descripcionHTML}<div style="display:flex;gap:8px;justify-content:center;align-items:center;margin-top:10px">${controlesRapidos}${verDetalles}</div></div>`;
                 
                 fragment.appendChild(tarjeta);
             });
@@ -1197,9 +1222,14 @@
             cargarCatalogo('vapes');
         }
         
-        // Función para mostrar el catálogo completo de wax
-        function mostrarCatalogoWax() {
-            cargarCatalogo('wax');
+        // Función para mostrar el catálogo completo de audífonos
+        function mostrarCatalogoAudifonos() {
+            cargarCatalogo('audifonos');
+        }
+
+        // Función para mostrar el catálogo completo de pulseras
+        function mostrarCatalogoPulseras() {
+            cargarCatalogo('pulseras');
         }
 
         function irAlInicio() {
@@ -1218,6 +1248,8 @@
         function abrirModal(idProducto) {
             productoActual = listaProductos.find(p => p.id === idProducto);
             if(!productoActual) return;
+            // Las categorías simples (audífonos/pulseras) no usan el modal de pedido
+            if (esCategoriaSimple(productoActual.categoria)) return;
 
             document.getElementById('modal-img').src = productoActual.img;
             document.getElementById('modal-titulo-producto').innerText = productoActual.nombre;
@@ -1295,7 +1327,7 @@
                 const card = document.createElement('div');
                 card.className = 'card-recomendada';
                 card.onclick = function() { window.scrollTo({ top: 0, behavior: 'smooth' }); abrirModal(rec.id); };
-                card.innerHTML = `<img src="${rec.img}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/wakavapes_icono.webp'"><div><p class="rec-nombre">${rec.nombre}</p><p class="rec-precio">${formatearDinero(rec.precio)}</p></div>`;
+                card.innerHTML = `<img src="${rec.img}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/polarx_icono.webp'"><div><p class="rec-nombre">${rec.nombre}</p><p class="rec-precio">${formatearDinero(rec.precio)}</p></div>`;
                 gridRecom.appendChild(card);
             });
             // Añadir flechas flotantes para scroll táctil en recomendaciones
@@ -1522,24 +1554,16 @@
                         return; // Saltar este item
                     }
                     
-                    // Verificar si es producto wax
-                    const productoOriginal = listaProductos.find(p => p.id === it.id);
-                    const esWax = productoOriginal && productoOriginal.categoria === 'wax';
-                    
                     const cantidad = parseInt(it.cantidad, 10) || 1;
                     const precio = parseFloat(it.precio) || 0;
-                    // Wax no suma al total
-                    if (!esWax) {
-                        total += cantidad * precio;
-                    }
+                    total += cantidad * precio;
                     
-                    // Wax muestra COTIZAR PRECIO
-                    const precioMostrar = esWax ? '<span class="cotizar-precio">COTIZAR PRECIO</span>' : formatearDinero(precio * cantidad);
+                    const precioMostrar = formatearDinero(precio * cantidad);
                     
                     const row = document.createElement('div');
                     row.className = 'floating-cart-item';
                     row.innerHTML = `
-                        <img src="${it.img || 'img/iconos/wakavapes_icono.webp'}" onerror="this.onerror=null;this.src='img/iconos/wakavapes_icono.webp'" alt="${it.nombre || 'Producto'}">
+                        <img src="${it.img || 'img/iconos/polarx_icono.webp'}" onerror="this.onerror=null;this.src='img/iconos/polarx_icono.webp'" alt="${it.nombre || 'Producto'}">
                         <div class="fci-info">
                             <div class="fci-name">${it.nombre || 'Producto'}</div>
                             <div class="fci-variant">${it.variante || 'Estándar'}</div>
@@ -1727,17 +1751,9 @@
 
             carrito.forEach((it) => {
                 try {
-                    // Verificar si es producto wax
-                    const productoOriginal = listaProductos.find(p => p.id === it.id);
-                    const esWax = productoOriginal && productoOriginal.categoria === 'wax';
-                    
                     const subtotal = (parseInt(it.cantidad,10) || 0) * it.precio;
-                    // Wax no suma al total
-                    if (!esWax) {
-                        total += subtotal;
-                    }
-                    // Wax muestra COTIZAR PRECIO en WhatsApp
-                    const precioTexto = esWax ? '_COTIZAR PRECIO_' : formatearDinero(subtotal);
+                    total += subtotal;
+                    const precioTexto = formatearDinero(subtotal);
                     lines.push(`┌─────────────────┐`);
                     lines.push(`│ ${it.nombre}`);
                     lines.push(`│ Variante: ${it.variante}`);
@@ -1859,17 +1875,9 @@
             let productosHTML = [];
 
             carrito.forEach((it) => {
-                // Verificar si es producto wax
-                const productoOriginal = listaProductos.find(p => p.id === it.id);
-                const esWax = productoOriginal && productoOriginal.categoria === 'wax';
-                
                 const subtotal = (parseInt(it.cantidad,10) || 0) * it.precio;
-                // Wax no suma al total
-                if (!esWax) {
-                    total += subtotal;
-                }
-                // Mostrar COTIZAR PRECIO para wax, precio normal para otros
-                const precioTexto = esWax ? '<strong style="color:#f57c00;">COTIZAR PRECIO</strong>' : formatearDinero(subtotal);
+                total += subtotal;
+                const precioTexto = formatearDinero(subtotal);
                 productosHTML.push(`<li><strong>${it.nombre}</strong> (${it.variante}) x${it.cantidad}: ${precioTexto}</li>`);
             });
 
