@@ -343,9 +343,10 @@
     <div id="email-prompt" class="custom-alert-overlay" style="display:none; z-index:9999;">
         <div class="custom-alert-box" style="max-width: 380px;">
             <div class="alert-icon"><i class="ph ph-envelope-simple"></i></div>
-            <h3>Correo para factura</h3>
-            <p>Escribe el correo del cliente. Se enviará la factura y copia a la tienda antes de abrir WhatsApp.</p>
-            <input type="email" id="email-prompt-input" placeholder="ejemplo@(gmail, outlook, hotmail).com" autocomplete="email" class="input-modal-texto" style="margin:12px 0;">
+            <h3>Datos de contacto</h3>
+            <p>Tu pedido se identificará con tu número de teléfono. Escribe tu correo y tu número para continuar.</p>
+            <input type="email" id="email-prompt-input" placeholder="ejemplo@(gmail, outlook, hotmail).com" autocomplete="email" class="input-modal-texto" style="margin:12px 0 8px;">
+            <input type="tel" inputmode="numeric" pattern="[0-9]*" id="phone-prompt-input" placeholder="Tu número de teléfono (10 dígitos)" autocomplete="tel" class="input-modal-texto" style="margin:0 0 12px;" maxlength="10">
             <div style="display:flex; gap:10px; width:100%;">
                 <button class="btn-alert" style="background:#444;" onclick="cerrarPromptCorreo()">Cancelar</button>
                 <button class="btn-alert" onclick="confirmarPromptCorreo()">Continuar</button>
@@ -407,12 +408,20 @@
         };
 
         // Endpoint de correo (Apps Script) y copia a tienda
-        const WHATSAPP_PHONE = '5215631676303';
-        const EMAIL_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyJJYKVVlv34boAX_e--sLTOkRIOJAKNcpZLJuero8t9CsHQF1pK-pLZ9FnkCrnJh6s/exec';
-        const EMAIL_CC = 'josuearriaga98@gmail.com'; // Copia para la tienda
+        const WHATSAPP_PHONE = '5219241781748';
+        const EMAIL_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyH3_ExQMuDHY3qfsPZD9pVVgYboPkLl46j_OqVTIUjKg_MN7gJfePpEOd6ROWzOjxmKw/exec';
+        const EMAIL_CC = 'polarx.facturas@gmail.com'; // Copia para la tienda
         const EMAIL_COOLDOWN_MS = 30000; // 30s entre envíos
         let _emailCooldownUntil = 0;
         let _pendingAction = null; // 'carrito' o 'modal'
+
+        // Datos bancarios para transferencia (edita aquí para actualizar en TODOS los mensajes/facturas)
+        const DATOS_BANCARIOS = {
+            banco: 'Santander',
+            cuenta: '5579 0790 0594 2705',
+            titular: 'Iker Chavez',
+            concepto: 'Solo poner PAGO, si no, no será válido el pago'
+        };
 
         // =================================================================
         // === ZONAS SEGUROS PARA EDITAR ===
@@ -553,8 +562,8 @@
                 if (phoneSpan) {
                     phoneSpan.onclick = function(e) {
                         e.stopPropagation();
-                        const numero = phoneSpan.textContent.trim().replace(/\s/g, '');
-                        window.open(`https://wa.me/52${numero}`, '_blank');
+                        const numero = phoneSpan.textContent.trim().replace(/\s/g, '').replace(/^\+/, '');
+                        window.open(`https://wa.me/${numero}`, '_blank');
                     };
                 }
             }, 300);
@@ -614,15 +623,24 @@
         function cerrarPromptCorreo() {
             const prompt = document.getElementById('email-prompt');
             if (prompt) prompt.style.display = 'none';
+            const phoneInput = document.getElementById('phone-prompt-input');
+            if (phoneInput) phoneInput.value = '';
             _pendingAction = null;
         }
 
         async function confirmarPromptCorreo() {
             const input = document.getElementById('email-prompt-input');
+            const phoneInput = document.getElementById('phone-prompt-input');
             const correo = (input ? input.value : '').trim();
+            const telefono = (phoneInput ? phoneInput.value : '').replace(/[^0-9]/g, '');
 
             if (!correo || !correo.includes('@') || !correo.includes('.')) {
                 mostrarAlertaModal('Ingresa un correo válido para enviar la factura.');
+                return;
+            }
+
+            if (!telefono || telefono.length !== 10) {
+                mostrarAlertaModal('Ingresa tu número de teléfono a 10 dígitos. Lo usaremos para identificar tu pedido.');
                 return;
             }
 
@@ -635,7 +653,7 @@
 
             const action = _pendingAction;
             cerrarPromptCorreo();
-            await procesarAccionConCorreo(correo, action);
+            await procesarAccionConCorreo(correo, telefono, action);
         }
 
         // Muestra una confirmación visual destacada al agregar producto
@@ -1738,13 +1756,12 @@
         }
 
         // Construye mensaje de WhatsApp para el carrito completo
-        function construirMensajeCarrito() {
+        function construirMensajeCarrito(telefono) {
             if (carrito.length === 0) { mostrarAlertaModal('El carrito está vacío'); return null; }
 
-            const folio = Math.floor(1000 + Math.random() * 9000);
             let lines = [];
-            lines.push(`📝 *PEDIDO #${folio}*`);
-            lines.push('');
+            lines.push(`📋 *PEDIDO - Tel: ${telefono}*`);
+            lines.push('───────────────');
 
             let total = 0;
 
@@ -1753,41 +1770,25 @@
                     const subtotal = (parseInt(it.cantidad,10) || 0) * it.precio;
                     total += subtotal;
                     const precioTexto = formatearDinero(subtotal);
-                    lines.push(`┌─────────────────┐`);
-                    lines.push(`│ ${it.nombre}`);
-                    lines.push(`│ Variante: ${it.variante}`);
-                    lines.push(`│ Cantidad: x${it.cantidad}`);
-                    lines.push(`│ Precio: ${precioTexto}`);
-                    lines.push(`└─────────────────┘`);
+                    lines.push(`📦 ${it.nombre} (${it.variante}) x${it.cantidad} - ${precioTexto}`);
                 } catch (e) {
                     console.warn('Item inválido en carrito:', e, it);
                 }
             });
 
-            lines.push('');
             lines.push('───────────────');
             lines.push(`💰 *TOTAL: ${formatearDinero(total)}*`);
             lines.push('');
-            lines.push('━━━━━━━━━━━━━━━━━━━━━');
-            lines.push('🏦 *CUENTA PARA TRANSFERENCIA*');
-            lines.push('');
-            lines.push('⚠️ *IMPORTANTE*');
-            lines.push('• Únicamente TRANSFERENCIA');
-            lines.push('• Concepto: solo *PAGO*');
-            lines.push('• NO poner nombres');
-            lines.push('• Si pones otra cosa NO será válido');
-            lines.push('• Depósito en efectivo NO válido');
-            lines.push('');
-            lines.push('🏦 *BANAMEX*');
-            lines.push('DIEGO JEDIAEL ARRIAGA GUTIERREZ');
-            lines.push('CLABE: *002180701940824181*');
-            lines.push('━━━━━━━━━━━━━━━━━━━━━');
+            lines.push('🏦 *DATOS DE TRANSFERENCIA*');
+            lines.push(`Cuenta: ${DATOS_BANCARIOS.cuenta}`);
+            lines.push(`Titular: ${DATOS_BANCARIOS.titular}`);
+            lines.push(`Concepto: ${DATOS_BANCARIOS.concepto}`);
 
-            return { mensaje: lines.join('\n'), folio };
+            return { mensaje: lines.join('\n'), telefono };
         }
 
         // Construye mensaje de WhatsApp para el producto del modal
-        function construirMensajeModal() {
+        function construirMensajeModal(telefono) {
             if (!productoActual) { mostrarAlertaModal('Selecciona un producto.'); return null; }
 
             const hv = document.getElementById('variante-seleccionada-valor');
@@ -1801,35 +1802,28 @@
             const cantidad = parseInt(document.getElementById('cantidad-seleccionada').value, 10) || 1;
             const pago = document.querySelector('input[name="pago"]:checked').value;
             const total = cantidad * productoActual.precio;
-            const folio = Math.floor(1000 + Math.random() * 9000);
 
-            let mensaje = `*PEDIDO #${folio}*\n\n`;
-            mensaje += `${productoActual.nombre} (${variante}) x${cantidad} - ${formatearDinero(total)}\n`;
-            mensaje += `\n💳 Pago: ${pago}\n`;
-            
-            // Si es transferencia, agregar datos bancarios
+            let lines = [];
+            lines.push(`📋 *PEDIDO - Tel: ${telefono}*`);
+            lines.push('───────────────');
+            lines.push(`📦 ${productoActual.nombre} (${variante}) x${cantidad} - ${formatearDinero(total)}`);
+            lines.push('───────────────');
+            lines.push(`💰 *TOTAL: ${formatearDinero(total)}*`);
+            lines.push(`💳 Pago: ${pago}`);
+
             if (pago === 'Transferencia') {
-                mensaje += `\n━━━━━━━━━━━━━━━━━━━━━`;
-                mensaje += `\n🏦 *CUENTA PARA TRANSFERENCIA*\n`;
-                mensaje += `\n⚠️ *IMPORTANTE*\n`;
-                mensaje += `• Únicamente TRANSFERENCIA\n`;
-                mensaje += `• Concepto: solo *PAGO*\n`;
-                mensaje += `• NO poner nombres\n`;
-                mensaje += `• Si pones otra cosa NO será válido\n`;
-                mensaje += `• Depósito en efectivo NO válido\n`;
-                mensaje += `\n🏦 *BANAMEX*\n`;
-                mensaje += `DIEGO JEDIAEL ARRIAGA GUTIERREZ\n`;
-                mensaje += `CLABE: *002180701940824181*\n`;
-                mensaje += `━━━━━━━━━━━━━━━━━━━━━`;
+                lines.push('');
+                lines.push('🏦 *DATOS DE TRANSFERENCIA*');
+                lines.push(`Cuenta: ${DATOS_BANCARIOS.cuenta}`);
+                lines.push(`Titular: ${DATOS_BANCARIOS.titular}`);
+                lines.push(`Concepto: ${DATOS_BANCARIOS.concepto}`);
             }
-            
-            mensaje += `\n*Total: ${formatearDinero(total)}*`;
 
-            return { mensaje, folio };
+            return { mensaje: lines.join('\n'), telefono };
         }
 
         // Construye HTML para la factura del modal (un solo producto)
-        function generarFacturaModalHTML(folio) {
+        function generarFacturaModalHTML(telefono) {
             if (!productoActual) return { html: '', total: 0 };
 
             const hv = document.getElementById('variante-seleccionada-valor');
@@ -1841,27 +1835,22 @@
             const cantidad = parseInt(document.getElementById('cantidad-seleccionada').value, 10) || 1;
             const total = cantidad * productoActual.precio;
 
+            const conceptoResaltado = DATOS_BANCARIOS.concepto.replace(/PAGO/g, '<span style="color:#1565c0;">PAGO</span>');
+
             const html = `
                 <div style="font-family: Arial, sans-serif; color:#222;">
-                    <h2 style="margin:0 0 12px 0;">Factura / Pedido #${folio}</h2>
+                    <h2 style="margin:0 0 12px 0;">Factura de pedido</h2>
+                    <p style="margin:0 0 4px 0; color:#555; font-size:0.95rem;">Teléfono de contacto: <strong>${telefono}</strong></p>
+                    <p style="margin:0 0 12px 0; font-size:0.95rem;"><strong>Envía por WhatsApp la captura de esta factura junto con tu comprobante de pago, y ponte de acuerdo con nosotros sobre el día, hora y lugar de entrega.</strong></p>
                     <div style="margin-bottom:12px;"><h4 style="margin:0 0 6px 0;">Productos</h4><ul style="padding-left:18px;"><li><strong>${productoActual.nombre}</strong> (${variante}) x${cantidad}: ${formatearDinero(total)}</li></ul></div>
                     <hr style="border:none; border-top:1px solid #ddd; margin:12px 0;">
                     <p style="margin:0; font-size:1.05rem;">Total: <strong>${formatearDinero(total)}</strong></p>
                     <div style="background:#fff3cd; border:2px solid #ffc107; border-radius:8px; padding:16px; margin-top:20px;">
-                        <h3 style="margin:0 0 10px 0; color:#856404; font-size:1.1rem;">🏦 Cuenta para Transferencia</h3>
-                        <div style="background:#fff8e1; border-radius:6px; padding:12px; margin-bottom:12px;">
-                            <p style="margin:0 0 8px 0; color:#d32f2f; font-weight:bold; font-size:0.95rem;">⚠️ IMPORTANTE:</p>
-                            <ul style="margin:0; padding-left:18px; font-size:0.9rem; color:#555;">
-                                <li>Únicamente TRANSFERENCIA</li>
-                                <li>Concepto: solo <strong>PAGO</strong></li>
-                                <li>NO poner nombres</li>
-                                <li>Si pones otra cosa NO será válido el pago</li>
-                                <li style="color:#d32f2f;">Depósito en efectivo NO SE HARÁ VÁLIDO</li>
-                            </ul>
-                        </div>
-                        <p style="margin:6px 0; font-size:1rem;"><strong>🏦 BANAMEX</strong></p>
-                        <p style="margin:6px 0; font-size:0.95rem;"><strong>Titular:</strong> DIEGO JEDIAEL ARRIAGA GUTIERREZ</p>
-                        <p style="margin:6px 0; font-size:0.95rem;"><strong>CLABE:</strong> <span style="font-family:monospace; background:#f5f5f5; padding:2px 6px; border-radius:4px;">002180701940824181</span></p>
+                        <h3 style="margin:0 0 10px 0; color:#856404; font-size:1.1rem;">----- Datos de Transferencia -----</h3>
+                        <p style="margin:0 0 10px 0; color:#d32f2f; font-weight:bold; font-size:0.9rem;">Concepto: ${conceptoResaltado}</p>
+                        <p style="margin:6px 0; font-size:0.95rem;"><strong>Banco:</strong> ${DATOS_BANCARIOS.banco}</p>
+                        <p style="margin:6px 0; font-size:0.95rem;"><strong>Titular:</strong> ${DATOS_BANCARIOS.titular}</p>
+                        <p style="margin:6px 0; font-size:0.95rem;"><strong>Número de cuenta:</strong> <span style="font-family:monospace; background:#f5f5f5; padding:2px 6px; border-radius:4px;">${DATOS_BANCARIOS.cuenta}</span></p>
                     </div>
                 </div>`;
 
@@ -1869,7 +1858,7 @@
         }
 
         // Construye HTML para la factura a enviar por email
-        function generarFacturaHTML(folio) {
+        function generarFacturaHTML(telefono) {
             let total = 0;
             let productosHTML = [];
 
@@ -1880,27 +1869,22 @@
                 productosHTML.push(`<li><strong>${it.nombre}</strong> (${it.variante}) x${it.cantidad}: ${precioTexto}</li>`);
             });
 
+            const conceptoResaltado = DATOS_BANCARIOS.concepto.replace(/PAGO/g, '<span style="color:#1565c0;">PAGO</span>');
+
             const html = `
                 <div style="font-family: Arial, sans-serif; color:#222;">
-                    <h2 style="margin:0 0 12px 0;">Factura / Pedido #${folio}</h2>
-                    <div style="margin-bottom:12px;"><h4 style="margin:0 0 6px 0;">Productos</h4><ul style="padding-left:18px;">${productosHTML.join('')}</ul></div>
+                    <h2 style="margin:0 0 12px 0;">Factura de pedido</h2>
+                    <p style="margin:0 0 4px 0; color:#555; font-size:0.95rem;">Teléfono de contacto: <strong>${telefono}</strong></p>
+                    <p style="margin:0 0 12px 0; font-size:0.95rem;"><strong>Envía por WhatsApp la captura de esta factura junto con tu comprobante de pago, y ponte de acuerdo con nosotros sobre el día, hora y lugar de entrega.</strong></p>
+                    <div style="margin-bottom:12px;"><h4 style="margin:0 0 6px 0;">Productos</h4><ul style="padding-left:18px; font-size: 1.05rem;">${productosHTML.join('')}</ul></div>
                     <hr style="border:none; border-top:1px solid #ddd; margin:12px 0;">
                     <p style="margin:0; font-size:1.05rem;">Total: <strong>${formatearDinero(total)}</strong></p>
                     <div style="background:#fff3cd; border:2px solid #ffc107; border-radius:8px; padding:16px; margin-top:20px;">
-                        <h3 style="margin:0 0 10px 0; color:#856404; font-size:1.1rem;">🏦 Cuenta para Transferencia</h3>
-                        <div style="background:#fff8e1; border-radius:6px; padding:12px; margin-bottom:12px;">
-                            <p style="margin:0 0 8px 0; color:#d32f2f; font-weight:bold; font-size:0.95rem;">⚠️ IMPORTANTE:</p>
-                            <ul style="margin:0; padding-left:18px; font-size:0.9rem; color:#555;">
-                                <li>Únicamente TRANSFERENCIA</li>
-                                <li>Concepto: solo <strong>PAGO</strong></li>
-                                <li>NO poner nombres</li>
-                                <li>Si pones otra cosa NO será válido el pago</li>
-                                <li style="color:#d32f2f;">Depósito en efectivo NO SE HARÁ VÁLIDO</li>
-                            </ul>
-                        </div>
-                        <p style="margin:6px 0; font-size:1rem;"><strong>🏦 BANAMEX</strong></p>
-                        <p style="margin:6px 0; font-size:0.95rem;"><strong>Titular:</strong> DIEGO JEDIAEL ARRIAGA GUTIERREZ</p>
-                        <p style="margin:6px 0; font-size:0.95rem;"><strong>CLABE:</strong> <span style="font-family:monospace; background:#f5f5f5; padding:2px 6px; border-radius:4px;">002180701940824181</span></p>
+                        <h3 style="margin:0 0 10px 0; color:#856404; font-size:1.1rem;">----- Datos de Transferencia -----</h3>
+                        <p style="margin:0 0 10px 0; color:#d32f2f; font-weight:bold; font-size:0.9rem;">Concepto: ${conceptoResaltado}</p>
+                        <p style="margin:6px 0; font-size:0.95rem;"><strong>Banco:</strong> ${DATOS_BANCARIOS.banco}</p>
+                        <p style="margin:6px 0; font-size:0.95rem;"><strong>Titular:</strong> ${DATOS_BANCARIOS.titular}</p>
+                        <p style="margin:6px 0; font-size:0.95rem;"><strong>Número de cuenta:</strong> <span style="font-family:monospace; background:#f5f5f5; padding:2px 6px; border-radius:4px;">${DATOS_BANCARIOS.cuenta}</span></p>
                     </div>
                 </div>`;
 
@@ -1908,18 +1892,18 @@
         }
 
         // Envía la factura por email usando Apps Script
-        async function enviarFacturaPorCorreo(correoCliente, folio, action) {
+        async function enviarFacturaPorCorreo(correoCliente, telefono, action) {
             if (!correoCliente) throw new Error('EMAIL_REQUERIDO');
             if (carrito.length === 0) throw new Error('CARRITO_VACIO');
 
             const ahora = Date.now();
             if (ahora < _emailCooldownUntil) throw new Error('COOLDOWN');
 
-            const { html } = action === 'modal' ? generarFacturaModalHTML(folio) : generarFacturaHTML(folio);
+            const { html } = action === 'modal' ? generarFacturaModalHTML(telefono) : generarFacturaHTML(telefono);
             const payload = {
                 to: correoCliente,
                 cc: EMAIL_CC,
-                subject: `Factura pedido #${folio}`,
+                subject: `Pedido - Tel: ${telefono}`,
                 body: html
             };
 
@@ -1946,17 +1930,17 @@
         }
 
         // Orquesta el flujo: factura -> WhatsApp
-        async function procesarAccionConCorreo(correoCliente, action) {
+        async function procesarAccionConCorreo(correoCliente, telefono, action) {
             if (!action) { mostrarAlertaModal('No se pudo iniciar el envío. Intenta de nuevo.'); return; }
 
-            const build = action === 'carrito' ? construirMensajeCarrito() : construirMensajeModal();
+            const build = action === 'carrito' ? construirMensajeCarrito(telefono) : construirMensajeModal(telefono);
             if (!build) { return; }
 
-            const { mensaje, folio } = build;
+            const { mensaje } = build;
 
             try {
                 mostrarToast('Enviando factura...');
-                await enviarFacturaPorCorreo(correoCliente, folio, action);
+                await enviarFacturaPorCorreo(correoCliente, telefono, action);
                 mostrarToast('Factura enviada. Abriendo WhatsApp...');
                 const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(mensaje)}`;
                 // Usar location.href para mejor compatibilidad con móviles
