@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -236,8 +237,15 @@
             <button class="cerrar-modal" onclick="cerrarModal()"><i class="ph ph-x"></i></button>
             <div class="modal-body">
                 <div class="producto-header">
-                    <div class="producto-imagen-grande">
+                    <div class="producto-imagen-grande" id="modal-imagen-carrusel">
+                        <button class="carrusel-arrow carrusel-arrow-left" id="modal-carrusel-prev" onclick="moverCarruselModal(-1)" aria-label="Imagen anterior">
+                            <i class="ph ph-caret-left"></i>
+                        </button>
                         <img id="modal-img" src="" alt="Producto">
+                        <button class="carrusel-arrow carrusel-arrow-right" id="modal-carrusel-next" onclick="moverCarruselModal(1)" aria-label="Siguiente imagen">
+                            <i class="ph ph-caret-right"></i>
+                        </button>
+                        <div class="carrusel-dots" id="modal-carrusel-dots"></div>
                     </div>
                     <div class="producto-info-base">
                         <h2 id="modal-titulo-producto">Nombre</h2>
@@ -501,7 +509,7 @@
                                 variante: item.variante || 'Estándar',
                                 nombre: item.nombre || productoOriginal.nombre,
                                 precio: item.precio || productoOriginal.precio,
-                                img: item.img || productoOriginal.img
+                                img: item.img || obtenerImagenes(productoOriginal)[0]
                             };
                         }
                         // Si no se encuentra el producto, devolver el item tal cual
@@ -763,7 +771,7 @@
                     variante: variante,
                     nombre: productoActual.nombre,
                     precio: productoActual.precio,
-                    img: productoActual.img
+                    img: obtenerImagenes(productoActual)[0]
                 });
 
                 if (mostrarConfirmacion) {
@@ -937,7 +945,7 @@
                     
                     // Crear elementos en lugar de usar innerHTML para mejor rendimiento
                     const img = document.createElement('img');
-                    img.src = prod.img;
+                    img.src = obtenerImagenes(prod)[0];
                     img.loading = 'lazy';
                     img.decoding = 'async';
                     img.style.cssText = `width:36px;height:36px;object-fit:cover;border-radius:5px;margin-right:8px;${prod.agotado ? 'filter:grayscale(100%);opacity:0.6;' : ''}`;
@@ -1124,9 +1132,9 @@
             if (filtro === 'vapes' || filtro === 'plumas') {
                 const scrollAPlumas = (filtro === 'plumas');
                 
-                // Barra de acceso rápido sticky
+                // Barra de acceso rápido flotante (liquid glass)
                 contenedor.innerHTML = `
-                    <div class="quick-nav" id="quick-nav" style="grid-column: 1 / -1;">
+                    <div class="quick-nav" id="quick-nav">
                         <button class="quick-nav-btn active" onclick="scrollToSeccion('seccion-vapes')">VAPES</button>
                         <button class="quick-nav-btn" onclick="scrollToSeccion('seccion-plumas')">PLUMAS</button>
                     </div>
@@ -1271,7 +1279,7 @@
 
                 const verDetalles = (!estaAgotado && !esSimple) ? '<span class="texto-ver-detalles">Ver Detalles</span>' : '';
                 
-                tarjeta.innerHTML = `<div class="img-wrapper"><img src="${prod.img}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/polarx_icono.webp'"></div><div class="info-card${descripcionHTML ? ' info-card-desc' : ''}"><h3>${prod.nombre}</h3>${prec}${descripcionHTML}<div style="display:flex;gap:8px;justify-content:center;align-items:center;margin-top:10px">${controlesRapidos}${verDetalles}</div></div>`;
+                tarjeta.innerHTML = `${construirImgWrapperHTML(prod)}<div class="info-card${descripcionHTML ? ' info-card-desc' : ''}"><h3>${prod.nombre}</h3>${prec}${descripcionHTML}<div style="display:flex;gap:8px;justify-content:center;align-items:center;margin-top:10px">${controlesRapidos}${verDetalles}</div></div>`;
                 
                 fragment.appendChild(tarjeta);
             });
@@ -1290,7 +1298,7 @@
             // Buscar item existente por id+variante
             const idx = carrito.findIndex(it => it.id === producto.id && it.variante === variante);
             if (idx === -1) {
-                carrito.push({ id: producto.id, cantidad: 1, variante, nombre: producto.nombre, precio: producto.precio, img: producto.img });
+                carrito.push({ id: producto.id, cantidad: 1, variante, nombre: producto.nombre, precio: producto.precio, img: obtenerImagenes(producto)[0] });
             } else {
                 carrito[idx].cantidad = Number(carrito[idx].cantidad) + 1;
             }
@@ -1315,7 +1323,7 @@
             }
             const idx = carrito.findIndex(it => it.id === producto.id && it.variante === variante);
             if (idx === -1) {
-                carrito.push({ id: producto.id, cantidad: 1, variante, nombre: producto.nombre, precio: producto.precio, img: producto.img });
+                carrito.push({ id: producto.id, cantidad: 1, variante, nombre: producto.nombre, precio: producto.precio, img: obtenerImagenes(producto)[0] });
                 localStorage.setItem('vp_carrito', JSON.stringify(carrito));
                 actualizarBadgeCarrito();
                 renderFloatingCart();
@@ -1362,6 +1370,120 @@
             window.scrollTo(0,0);
         }
 
+        // ============================================================
+        // CARRUSEL DE IMÁGENES (modal y tarjetas de grid)
+        // Cada producto define `imagenes: ["ruta1.jpg", "ruta2.jpg", ...]`
+        // Soporta cualquier cantidad de imágenes (1, 2, 3, o más).
+        // ============================================================
+        function obtenerImagenes(producto) {
+            if (producto && Array.isArray(producto.imagenes) && producto.imagenes.length > 0) {
+                return producto.imagenes;
+            }
+            // Fallback de seguridad si algún producto no tiene el campo
+            return ['img/iconos/polarx_icono.webp'];
+        }
+
+        let _modalCarruselIndex = 0;
+        let _modalCarruselImagenes = [];
+
+        function inicializarCarruselModal(producto) {
+            _modalCarruselImagenes = obtenerImagenes(producto);
+            _modalCarruselIndex = 0;
+            renderCarruselModal();
+        }
+
+        function renderCarruselModal() {
+            const img = document.getElementById('modal-img');
+            const dots = document.getElementById('modal-carrusel-dots');
+            const prevBtn = document.getElementById('modal-carrusel-prev');
+            const nextBtn = document.getElementById('modal-carrusel-next');
+            if (!img) return;
+
+            img.src = _modalCarruselImagenes[_modalCarruselIndex];
+            img.onerror = function() { this.onerror = null; this.src = 'img/iconos/polarx_icono.webp'; };
+
+            const hayVarias = _modalCarruselImagenes.length > 1;
+            if (prevBtn) prevBtn.classList.toggle('oculto', !hayVarias);
+            if (nextBtn) nextBtn.classList.toggle('oculto', !hayVarias);
+
+            if (dots) {
+                dots.innerHTML = '';
+                if (hayVarias) {
+                    _modalCarruselImagenes.forEach((_, i) => {
+                        const dot = document.createElement('button');
+                        dot.className = 'carrusel-dot' + (i === _modalCarruselIndex ? ' activo' : '');
+                        dot.setAttribute('aria-label', `Imagen ${i + 1}`);
+                        dot.onclick = (e) => { e.stopPropagation(); _modalCarruselIndex = i; renderCarruselModal(); };
+                        dots.appendChild(dot);
+                    });
+                }
+            }
+        }
+
+        function moverCarruselModal(direccion) {
+            if (_modalCarruselImagenes.length <= 1) return;
+            _modalCarruselIndex = (_modalCarruselIndex + direccion + _modalCarruselImagenes.length) % _modalCarruselImagenes.length;
+            renderCarruselModal();
+        }
+
+        // Estado de carrusel por tarjeta en el grid: { productId: indiceActual }
+        let _gridCarruselState = {};
+
+        function moverCarruselTarjeta(event, idProducto, direccion) {
+            event.stopPropagation();
+            const producto = listaProductos.find(p => p.id === idProducto);
+            if (!producto) return;
+            const imagenes = obtenerImagenes(producto);
+            if (imagenes.length <= 1) return;
+
+            const actual = _gridCarruselState[idProducto] || 0;
+            const nuevo = (actual + direccion + imagenes.length) % imagenes.length;
+            _gridCarruselState[idProducto] = nuevo;
+
+            const wrapper = document.querySelector(`.img-wrapper[data-carrusel-id="${idProducto}"]`);
+            if (!wrapper) return;
+            const img = wrapper.querySelector('img');
+            if (img) img.src = imagenes[nuevo];
+            wrapper.querySelectorAll('.carrusel-dot').forEach((dot, i) => {
+                dot.classList.toggle('activo', i === nuevo);
+            });
+        }
+
+        function irAImagenTarjeta(event, idProducto, indice) {
+            event.stopPropagation();
+            const producto = listaProductos.find(p => p.id === idProducto);
+            if (!producto) return;
+            const imagenes = obtenerImagenes(producto);
+            _gridCarruselState[idProducto] = indice;
+
+            const wrapper = document.querySelector(`.img-wrapper[data-carrusel-id="${idProducto}"]`);
+            if (!wrapper) return;
+            const img = wrapper.querySelector('img');
+            if (img) img.src = imagenes[indice];
+            wrapper.querySelectorAll('.carrusel-dot').forEach((dot, i) => {
+                dot.classList.toggle('activo', i === indice);
+            });
+        }
+
+        // Construye el HTML del wrapper de imagen con carrusel para una tarjeta de grid
+        function construirImgWrapperHTML(producto) {
+            const imagenes = obtenerImagenes(producto);
+            const indiceActual = _gridCarruselState[producto.id] || 0;
+            const hayVarias = imagenes.length > 1;
+
+            let flechas = '';
+            let dots = '';
+            if (hayVarias) {
+                flechas = `
+                    <button class="carrusel-arrow carrusel-arrow-left" onclick="moverCarruselTarjeta(event, ${producto.id}, -1)" aria-label="Imagen anterior"><i class="ph ph-caret-left"></i></button>
+                    <button class="carrusel-arrow carrusel-arrow-right" onclick="moverCarruselTarjeta(event, ${producto.id}, 1)" aria-label="Siguiente imagen"><i class="ph ph-caret-right"></i></button>
+                `;
+                dots = `<div class="carrusel-dots">${imagenes.map((_, i) => `<button class="carrusel-dot${i === indiceActual ? ' activo' : ''}" onclick="irAImagenTarjeta(event, ${producto.id}, ${i})" aria-label="Imagen ${i + 1}"></button>`).join('')}</div>`;
+            }
+
+            return `<div class="img-wrapper" data-carrusel-id="${producto.id}"><img src="${imagenes[indiceActual]}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/polarx_icono.webp'">${flechas}${dots}</div>`;
+        }
+
         // --- MODAL ---
         function abrirModal(idProducto) {
             productoActual = listaProductos.find(p => p.id === idProducto);
@@ -1369,7 +1491,6 @@
             // Las categorías simples (audífonos/pulseras) no usan el modal de pedido
             if (esCategoriaSimple(productoActual.categoria)) return;
 
-            document.getElementById('modal-img').src = productoActual.img;
             document.getElementById('modal-titulo-producto').innerText = productoActual.nombre;
                 // Mostrar puffs con formato con comas si aplica
                 const puffsMatch = /([0-9]{4,6})\s*puffs?/i.exec(productoActual.modelo);
@@ -1377,6 +1498,7 @@
                 document.getElementById('modal-puffs-formateado').innerText = puffsFormateado;
                 document.getElementById('modal-modelo-producto').innerText = '';
             
+            inicializarCarruselModal(productoActual);
             const contPrecio = document.getElementById('contenedor-precio-modal');
             contPrecio.innerHTML = `<span class="precio-modal">${formatearDinero(productoActual.precio)}</span>`;
 
@@ -1445,7 +1567,7 @@
                 const card = document.createElement('div');
                 card.className = 'card-recomendada';
                 card.onclick = function() { window.scrollTo({ top: 0, behavior: 'smooth' }); abrirModal(rec.id); };
-                card.innerHTML = `<img src="${rec.img}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/polarx_icono.webp'"><div><p class="rec-nombre">${rec.nombre}</p><p class="rec-precio">${formatearDinero(rec.precio)}</p></div>`;
+                card.innerHTML = `<img src="${obtenerImagenes(rec)[0]}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/polarx_icono.webp'"><div><p class="rec-nombre">${rec.nombre}</p><p class="rec-precio">${formatearDinero(rec.precio)}</p></div>`;
                 gridRecom.appendChild(card);
             });
             // Añadir flechas flotantes para scroll táctil en recomendaciones
@@ -1640,7 +1762,7 @@
             const existeIndex = carrito.findIndex(item => item.id === productoActual.id && item.variante === variante);
 
             if (existeIndex === -1) {
-                carrito.push({ id: productoActual.id, cantidad: 1, variante: variante, nombre: productoActual.nombre, precio: productoActual.precio, img: productoActual.img });
+                carrito.push({ id: productoActual.id, cantidad: 1, variante: variante, nombre: productoActual.nombre, precio: productoActual.precio, img: obtenerImagenes(productoActual)[0] });
                 icono.classList.remove('ph-shopping-cart-simple'); icono.classList.add('ph-shopping-cart'); icono.style.color = 'var(--gold-primary)';
             } else {
                 carrito.splice(existeIndex, 1);
