@@ -10,25 +10,25 @@ const listaProductosPlumas = [
     {
         id: 401, nombre: 'Besos 2g', precio: 0,
         descripcion: 'Descripción breve del producto.',
-        imagenes: ['img/plumas/besos_2g_f1.jpg', 'img/plumas/besos_2g_f2.jpg'],
+        imagenes: ['img/plumas/besos_2g_f1.jpg', 'img/plumas/besos_2g_f2.webp'],
         categoria: 'plumas', activo: true, agotado: false, orden: 1
     },
     {
         id: 402, nombre: 'Muhameds v2', precio: 0,
         descripcion: 'Descripción breve del producto.',
-        imagenes: ['img/plumas/muhameds_v2_f1.jpg', 'img/plumas/muhameds_v2_f2.jpg'],
+        imagenes: ['img/plumas/muhameds_v2_f1.jpg', 'img/plumas/muhameds_v2_f2.webp'],
         categoria: 'plumas', activo: true, agotado: false, orden: 2
     },
     {
         id: 403, nombre: 'Muhameds v3', precio: 0,
         descripcion: 'Descripción breve del producto.',
-        imagenes: ['img/plumas/muhameds_v3_f1.jpg', 'img/plumas/muhameds_v3_f2.jpg'],
+        imagenes: ['img/plumas/muhameds_v3_f1.jpg', 'img/plumas/muhameds_v3_f2.webp'],
         categoria: 'plumas', activo: true, agotado: false, orden: 3
     },
     {
         id: 404, nombre: 'Packman x Partyboyz', precio: 0,
         descripcion: 'Descripción breve del producto.',
-        imagenes: ['img/plumas/packmanxpartyboyz_f1.jpg', 'img/plumas/packmanxpartyboyz_f2.jpg'],
+        imagenes: ['img/plumas/packmanxpartyboyz_f1.jpg', 'img/plumas/packmanxpartyboyz_f2.webp'],
         categoria: 'plumas', activo: true, agotado: false, orden: 4
     },
     {
