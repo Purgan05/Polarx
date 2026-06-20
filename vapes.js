@@ -1,58 +1,57 @@
 let listaProductos = [
-    // ========== PRODUCTOS VAPES - PLACEHOLDERS PARA RELLENAR ==========
-    { id: 1, categoria: 'vapes', activo: true, orden: 1, agotado: false, nombre: "Producto 1", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_1_1.webp", "img/vapes/producto_1_2.webp"], sabores: [
+    // ========== PRODUCTOS VAPES ==========
+    { id: 1, categoria: 'vapes', activo: true, orden: 1, agotado: false, nombre: "Nexa Ultra", modelo: "50,000 Puffs", precio: 350, imagenes: ["img/vapes/nexa_ultra_50k_f1.webp", "img/vapes/nexa_ultra_50k_f2.webp"], sabores: [
+        { nombre: "Watermelon Ice", disponible: true }
+        
+    ] },
+    { id: 2, categoria: 'vapes', activo: true, orden: 2, agotado: false, nombre: "Relx", modelo: "15,000 Puffs", precio: 265, imagenes: ["img/vapes/relx_f1.webp", "img/vapes/relx_f2.webp"], sabores: [
+        { nombre: "OOlong Ice Tea", disponible: true }
+    ] },
+    { id: 3, categoria: 'vapes', activo: true, orden: 3, agotado: false, nombre: "Elux", modelo: "50,000 Puffs", precio: 0, imagenes: ["img/vapes/elux_50k_f1.webp", "img/vapes/elux_50k_f2.webp"], sabores: [
         { nombre: "Sabor 1", disponible: true },
         { nombre: "Sabor 2", disponible: true }
     ] },
-    { id: 2, categoria: 'vapes', activo: true, orden: 2, agotado: false, nombre: "Producto 2", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_2_1.webp", "img/vapes/producto_2_2.webp"], sabores: [
+    { id: 4, categoria: 'vapes', activo: true, orden: 4, agotado: false, nombre: "Lost Vape", modelo: "7,500 Puffs", precio: 0, imagenes: ["img/vapes/lostvape_bcc_f1.webp", "img/vapes/lostvape_bcc_f2.webp"], sabores: [
         { nombre: "Sabor 1", disponible: true },
         { nombre: "Sabor 2", disponible: true }
     ] },
-    { id: 3, categoria: 'vapes', activo: true, orden: 3, agotado: false, nombre: "Producto 3", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_3_1.webp", "img/vapes/producto_3_2.webp"], sabores: [
+    { id: 5, categoria: 'vapes', activo: true, orden: 5, agotado: false, nombre: "Lost Vape", modelo: "7,500 Puffs", precio: 0, imagenes: ["img/vapes/lostvape_bm_f1.webp", "img/vapes/lostvape_bm_f2.webp"], sabores: [
         { nombre: "Sabor 1", disponible: true },
         { nombre: "Sabor 2", disponible: true }
     ] },
-    { id: 4, categoria: 'vapes', activo: true, orden: 4, agotado: false, nombre: "Producto 4", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_4_1.webp", "img/vapes/producto_4_2.webp"], sabores: [
+    { id: 6, categoria: 'vapes', activo: true, orden: 6, agotado: false, nombre: "Lost Vape BMB", modelo: "7,500 Puffs", precio: 0, imagenes: ["img/vapes/lostvape_bmb_f1.webp", "img/vapes/lostvape_bmb_f2.webp"], sabores: [
         { nombre: "Sabor 1", disponible: true },
         { nombre: "Sabor 2", disponible: true }
     ] },
-    { id: 5, categoria: 'vapes', activo: true, orden: 5, agotado: false, nombre: "Producto 5", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_5_1.webp", "img/vapes/producto_5_2.webp"], sabores: [
+    { id: 7, categoria: 'vapes', activo: true, orden: 7, agotado: false, nombre: "Lost Vape CB", modelo: "7,500 Puffs", precio: 0, imagenes: ["img/vapes/lostvape_cb_f1.webp", "img/vapes/lostvape_cb_f2.webp"], sabores: [
         { nombre: "Sabor 1", disponible: true },
         { nombre: "Sabor 2", disponible: true }
     ] },
-    { id: 6, categoria: 'vapes', activo: true, orden: 6, agotado: false, nombre: "Producto 6", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_6_1.webp", "img/vapes/producto_6_2.webp"], sabores: [
+    { id: 8, categoria: 'vapes', activo: true, orden: 8, agotado: false, nombre: "Lost Vape GKM", modelo: "7,500 Puffs", precio: 0, imagenes: ["img/vapes/lostvape_gkm_f1.webp", "img/vapes/lostvape_gkm_f2.webp"], sabores: [
         { nombre: "Sabor 1", disponible: true },
         { nombre: "Sabor 2", disponible: true }
     ] },
-    { id: 7, categoria: 'vapes', activo: true, orden: 7, agotado: false, nombre: "Producto 7", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_7_1.webp", "img/vapes/producto_7_2.webp"], sabores: [
+    { id: 9, categoria: 'vapes', activo: true, orden: 9, agotado: false, nombre: "Lost Vape JP", modelo: "7,500 Puffs", precio: 0, imagenes: ["img/vapes/lostvape_jp_f1.webp", "img/vapes/lostvape_jp_f2.webp"], sabores: [
         { nombre: "Sabor 1", disponible: true },
         { nombre: "Sabor 2", disponible: true }
     ] },
-    { id: 8, categoria: 'vapes', activo: true, orden: 8, agotado: false, nombre: "Producto 8", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_8_1.webp", "img/vapes/producto_8_2.webp"], sabores: [
+    { id: 10, categoria: 'vapes', activo: true, orden: 10, agotado: false, nombre: "Lost Vape POP", modelo: "7,500 Puffs", precio: 0, imagenes: ["img/vapes/lostvape_pop_f1.webp", "img/vapes/lostvape_pop_f2.webp"], sabores: [
         { nombre: "Sabor 1", disponible: true },
         { nombre: "Sabor 2", disponible: true }
     ] },
-    { id: 9, categoria: 'vapes', activo: true, orden: 9, agotado: false, nombre: "Producto 9", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_9_1.webp", "img/vapes/producto_9_2.webp"], sabores: [
+    { id: 11, categoria: 'vapes', activo: true, orden: 11, agotado: false, nombre: "Lost Vape PP", modelo: "7,500 Puffs", precio: 0, imagenes: ["img/vapes/lostvape_pp_f1.webp", "img/vapes/lostvape_pp_f2.webp"], sabores: [
         { nombre: "Sabor 1", disponible: true },
         { nombre: "Sabor 2", disponible: true }
     ] },
-    { id: 10, categoria: 'vapes', activo: true, orden: 10, agotado: false, nombre: "Producto 10", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_10_1.webp", "img/vapes/producto_10_2.webp"], sabores: [
+    { id: 12, categoria: 'vapes', activo: true, orden: 12, agotado: false, nombre: "Lost Vape SK", modelo: "7,500 Puffs", precio: 0, imagenes: ["img/vapes/lostvape_sk_f1.webp", "img/vapes/lostvape_sk_f2.webp"], sabores: [
         { nombre: "Sabor 1", disponible: true },
         { nombre: "Sabor 2", disponible: true }
     ] },
-    { id: 11, categoria: 'vapes', activo: true, orden: 11, agotado: false, nombre: "Producto 11", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_11_1.webp", "img/vapes/producto_11_2.webp"], sabores: [
+    { id: 13, categoria: 'vapes', activo: true, orden: 13, agotado: false, nombre: "Lost Vape TB", modelo: "7,500 Puffs", precio: 0, imagenes: ["img/vapes/lostvape_tb_f1.webp", "img/vapes/lostvape_tb_f2.webp"], sabores: [
         { nombre: "Sabor 1", disponible: true },
         { nombre: "Sabor 2", disponible: true }
     ] },
-    { id: 12, categoria: 'vapes', activo: true, orden: 12, agotado: false, nombre: "Producto 12", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_12_1.webp", "img/vapes/producto_12_2.webp"], sabores: [
-        { nombre: "Sabor 1", disponible: true },
-        { nombre: "Sabor 2", disponible: true }
-    ] },
-    { id: 13, categoria: 'vapes', activo: true, orden: 13, agotado: false, nombre: "Producto 13", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_13_1.webp", "img/vapes/producto_13_2.webp"], sabores: [
-        { nombre: "Sabor 1", disponible: true },
-        { nombre: "Sabor 2", disponible: true }
-    ] },
-    { id: 14, categoria: 'vapes', activo: true, orden: 14, agotado: false, nombre: "Producto 14", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_14_1.webp", "img/vapes/producto_14_2.webp"], sabores: [
+    { id: 14, categoria: 'vapes', activo: true, orden: 14, agotado: false, nombre: "Lost Vape WC", modelo: "7,500 Puffs", precio: 0, imagenes: ["img/vapes/lostvape_wc_f1.webp", "img/vapes/lostvape_wc_f2.webp"], sabores: [
         { nombre: "Sabor 1", disponible: true },
         { nombre: "Sabor 2", disponible: true }
     ] },
