@@ -16,47 +16,47 @@ let listaProductos = [
             { nombre: "Miami Mint", disponible: true },
     ] },
     { id: 4, categoria: 'vapes', activo: true, orden: 4, agotado: false, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_bcc_f1.webp"], sabores: [
-        { nombre: "Sabor 1", disponible: true },
+        { nombre: "Blue Cotton Candy", disponible: true },
         
     ] },
     { id: 5, categoria: 'vapes', activo: true, orden: 5, agotado: false, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_bm_f1.webp"], sabores: [
-        { nombre: "Sabor 1", disponible: true },
+        { nombre: "Strawberry Kiwi", disponible: true },
         
     ] },
     { id: 6, categoria: 'vapes', activo: true, orden: 6, agotado: false, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_bmb_f1.webp"], sabores: [
-        { nombre: "Sabor 1", disponible: true },
+        { nombre: "Blackcurrant Mixed Berries", disponible: true },
         
     ] },
     { id: 7, categoria: 'vapes', activo: true, orden: 7, agotado: false, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_cb_f1.webp"], sabores: [
-        { nombre: "Sabor 1", disponible: true },
+        { nombre: "Cherry Berry", disponible: true },
        
     ] },
     { id: 8, categoria: 'vapes', activo: true, orden: 8, agotado: false, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_gkm_f1.webp"], sabores: [
-        { nombre: "Sabor 1", disponible: true },
+        { nombre: "Gold Kiwi Mint", disponible: true },
        
     ] },
     { id: 9, categoria: 'vapes', activo: true, orden: 9, agotado: false, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_jp_f1.webp"], sabores: [
-        { nombre: "Sabor 1", disponible: true },
+        { nombre: "Juicy Peach", disponible: true },
         
     ] },
     { id: 10, categoria: 'vapes', activo: true, orden: 10, agotado: false, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_pop_f1.webp"], sabores: [
-        { nombre: "Sabor 1", disponible: true },
+        { nombre: "P.O.P", disponible: true },
         
     ] },
     { id: 11, categoria: 'vapes', activo: true, orden: 11, agotado: false, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_pp_f1.webp"], sabores: [
-        { nombre: "Sabor 1", disponible: true },
+        { nombre: "Pineapple Peach", disponible: true },
        
     ] },
     { id: 12, categoria: 'vapes', activo: true, orden: 12, agotado: false, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_sk_f1.webp"], sabores: [
-        { nombre: "Sabor 1", disponible: true },
+        { nombre: "Strawberry Kiwi", disponible: true },
         
     ] },
     { id: 13, categoria: 'vapes', activo: true, orden: 13, agotado: false, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_tb_f1.webp"], sabores: [
-        { nombre: "Sabor 1", disponible: true },
+        { nombre: "Triple Berries", disponible: true },
 
     ] },
     { id: 14, categoria: 'vapes', activo: true, orden: 14, agotado: false, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_wc_f1.webp"], sabores: [
-        { nombre: "Sabor 1", disponible: true },
+        { nombre: "Watermelon Cream", disponible: true },
         
     ] },
     { id: 15, categoria: 'vapes', activo: false, orden: 15, agotado: false, nombre: "Producto 15", modelo: "0000 Puffs", precio: 0, imagenes: ["img/vapes/producto_15_1.webp"], sabores: [
