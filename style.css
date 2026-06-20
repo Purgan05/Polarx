@@ -621,7 +621,10 @@ header {
 .descripcion-card {
   color:var(--text-secondary); font-size:0.82rem; line-height:1.35;
   margin:6px 0 2px; padding:0 4px;
-  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  line-clamp:2;
   overflow:hidden;
 }
 .tarjeta-producto .info-card-desc { height:auto; min-height:185px }
@@ -778,6 +781,13 @@ header {
 .seccion-variantes { padding:0 25px }
 #titulo-variantes { color:var(--text-primary); margin-bottom:15px; font-size:1rem; font-weight:bold; display:block }
 .grid-variantes { display:flex; flex-wrap:wrap; gap:10px }
+
+.descripcion-modal {
+  color:var(--text-secondary); font-size:0.95rem; line-height:1.5;
+  background:linear-gradient(145deg,var(--az-50),var(--az-100));
+  border:1px solid rgba(0,0,0,0.12); border-radius:12px;
+  padding:14px 16px; margin:0;
+}
 
 .chip-variante {
   background:linear-gradient(145deg,var(--az-50),var(--az-100));
@@ -1402,28 +1412,28 @@ header {
 
 /* ── Quick Nav — Liquid Glass Floating Pill ── */
 .quick-nav {
-  position:fixed; right:16px; top:50%; transform:translateY(-50%);
-  z-index:3400; display:flex; flex-direction:column; gap:3px; padding:5px;
-  background:rgba(255,255,255,0.4);
+  position:fixed; top:45px; left: 135px;
+  z-index:2300; display:flex; flex-direction:row; gap:3px; padding:5px;
+  background:rgba(255,255,255,0.75);
   backdrop-filter:blur(24px) saturate(180%);
   -webkit-backdrop-filter:blur(24px) saturate(180%);
   border:1px solid rgba(255,255,255,0.65);
-  border-radius:18px;
+  border-radius:50px;
   box-shadow:
-    0 8px 32px rgba(0,0,0,0.10),
-    0 2px 8px rgba(0,0,0,0.05),
+    0 4px 16px rgba(0,0,0,0.06),
+    0 2px 8px rgba(0,0,0,0.04),
     inset 0 1px 0 rgba(255,255,255,0.85),
     inset 0 -1px 0 rgba(0,0,0,0.04);
-  animation:glassSlideIn 0.5s var(--ease-spring) forwards;
+  animation:glassSlideDown 0.5s var(--ease-spring) forwards;
   opacity:0;
 }
-@keyframes glassSlideIn {
-  from { opacity:0; transform:translateY(-50%) translateX(30px) scale(0.9) }
-  to   { opacity:1; transform:translateY(-50%) translateX(0) scale(1) }
+@keyframes glassSlideDown {
+  from { opacity:0; transform:translateX(-50%) translateY(-20px) scale(0.9) }
+  to   { opacity:1; transform:translateX(-50%) translateY(0) scale(1) }
 }
 
 .quick-nav-btn {
-  padding:12px 16px; border-radius:14px; border:none;
+  padding:10px 14px; border-radius:50px; border:none;
   background:transparent; color:var(--text-secondary);
   font-weight:800; font-size:0.68rem; letter-spacing:1.5px;
   cursor:pointer; text-transform:uppercase; white-space:nowrap;
@@ -1450,28 +1460,24 @@ header {
 /* ── Quick Nav responsive ── */
 @media (max-width:768px) {
   .quick-nav {
-    right:10px; padding:4px;
-    border-radius:14px; gap:2px;
+    top:90px; padding:4px;
+    border-radius:50px; gap:2px;
   }
   .quick-nav-btn {
-    padding:10px 12px; font-size:0.6rem; letter-spacing:1px;
-    min-height:38px; border-radius:11px;
+    padding:8px 12px; font-size:0.6rem; letter-spacing:1px;
+    min-height:38px; border-radius:50px;
   }
 }
 @media (max-width:420px) {
   .quick-nav {
-    right:8px; top:auto; bottom:88px;
-    transform:none; flex-direction:row;
-    border-radius:20px; padding:3px; gap:2px;
-    animation-name:glassSlideUp;
-  }
-  @keyframes glassSlideUp {
-    from { opacity:0; transform:translateY(20px) scale(0.9) }
-    to   { opacity:1; transform:translateY(0) scale(1) }
+    top:88px; left:50%; transform:translateX(-50%);
+    flex-direction:row;
+    border-radius:50px; padding:3px; gap:2px;
+    animation-name:glassSlideDown;
   }
   .quick-nav-btn {
-    padding:8px 14px; font-size:0.6rem;
-    min-height:34px; border-radius:16px;
+    padding:7px 11px; font-size:0.6rem;
+    min-height:34px; border-radius:50px;
   }
 }
 footer {

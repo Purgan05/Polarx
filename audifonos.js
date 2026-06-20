@@ -6,7 +6,7 @@
 // Para editar/agregar productos, modifica este archivo.
 
 const listaProductosAudifonos = [
-    { id: 201, categoria: 'audifonos', activo: true, orden: 1, agotado: false, nombre: "Airpods Pro 2", precio: 450, descripcion: "Aquí tienes la mejor calidad de sonido igual a la original con cancelacion de ruido activa, y con su bolsa de compra apple. ", imagenes: ["img/audifonos/audifonos_foto.webp", "img/audifonos/audifonos_referencia.webp"] },
+    { id: 201, categoria: 'audifonos', activo: true, orden: 1, agotado: false, nombre: "Airpods Pro 2", precio: 450, descripcion: "Aquí tienes la mejor calidad de sonido igual a la original con cancelacion de ruido activa", imagenes: ["img/audifonos/audifonos_foto.webp", "img/audifonos/audifonos_referencia.webp"] },
     { id: 202, categoria: 'audifonos', activo: false, orden: 2, agotado: false, nombre: "Audífonos 2", precio: 0, descripcion: "Descripción breve del producto.", imagenes: ["img/audifonos/producto_202_1.jpg", "img/audifonos/producto_202_2.jpg"] },
     { id: 203, categoria: 'audifonos', activo: false, orden: 3, agotado: false, nombre: "Audífonos 3", precio: 0, descripcion: "Descripción breve del producto.", imagenes: ["img/audifonos/producto_203_1.jpg", "img/audifonos/producto_203_2.jpg"] },
     { id: 204, categoria: 'audifonos', activo: false, orden: 4, agotado: false, nombre: "Audífonos 4", precio: 0, descripcion: "Descripción breve del producto.", imagenes: ["img/audifonos/producto_204_1.jpg", "img/audifonos/producto_204_2.jpg"] },
