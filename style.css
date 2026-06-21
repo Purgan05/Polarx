@@ -732,7 +732,7 @@ header {
   z-index:12; transition:all 0.2s ease; opacity:0.55;
   padding:0;
 }
-.carrusel-arrow svg { display:block; flex-shrink:0; pointer-events:none }
+.carrusel-arrow svg { display:block; flex-shrink:0; pointer-events:none; width:1em; height:1em }
 .carrusel-arrow-left { left:0; border-radius:0 10px 10px 0 }
 .carrusel-arrow-right { right:0; border-radius:10px 0 0 10px }
 .carrusel-arrow:hover { opacity:1; background:rgba(255,255,255,0.85); color:var(--text-primary) }
@@ -758,7 +758,7 @@ header {
 .img-wrapper .carrusel-arrow:hover { opacity:1 }
 .img-wrapper .carrusel-dots { bottom:6px }
 .img-wrapper .carrusel-dot { width:5px; height:5px }
-.img-wrapper .carrusel-dot.activo { width:12px }
+.img-wrapper .carrusel-dot.activo { width:10px; height:5px; border-radius:3px }
 
 /* En táctil (sin hover), mostrar las flechas tenues siempre para que se sepa que existen */
 @media (hover:none) {
@@ -1575,7 +1575,7 @@ footer {
 
   .grid-productos { padding:8px; gap:10px }
   .img-wrapper { height:160px }
-  .img-wrapper .carrusel-arrow { width:22px; height:34px }
+  .img-wrapper .carrusel-arrow { width:22px; height:34px; font-size:0.8rem }
   .carrusel-arrow { width:34px; height:50px; font-size:1.05rem }
 
   .nav-content { gap:8px; padding:0 6px }
