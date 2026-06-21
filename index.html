@@ -238,11 +238,11 @@
                 <div class="producto-header">
                     <div class="producto-imagen-grande" id="modal-imagen-carrusel">
                         <button class="carrusel-arrow carrusel-arrow-left" id="modal-carrusel-prev" onclick="moverCarruselModal(-1)" aria-label="Imagen anterior">
-                            <i class="ph ph-caret-left"></i>
+                            <svg viewBox="0 0 256 256" width="1em" height="1em" fill="currentColor"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"></path></svg>
                         </button>
                         <img id="modal-img" src="" alt="Producto">
                         <button class="carrusel-arrow carrusel-arrow-right" id="modal-carrusel-next" onclick="moverCarruselModal(1)" aria-label="Siguiente imagen">
-                            <i class="ph ph-caret-right"></i>
+                            <svg viewBox="0 0 256 256" width="1em" height="1em" fill="currentColor"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path></svg>
                         </button>
                         <div class="carrusel-dots" id="modal-carrusel-dots"></div>
                     </div>
@@ -1538,12 +1538,20 @@
             const indiceActual = _gridCarruselState[producto.id] || 0;
             const hayVarias = imagenes.length > 1;
 
+            // SVG inline en vez de íconos de fuente externa (ph-caret-left/right):
+            // así las flechas siempre se ven correctamente, sin depender de que
+            // el CDN de Phosphor Icons termine de cargar a tiempo (en conexiones
+            // lentas esto provocaba que se viera una flecha negra gigante y sólida
+            // encima de la imagen, antes de que el ícono real cargara).
+            const svgCaretLeft = '<svg viewBox="0 0 256 256" width="1em" height="1em" fill="currentColor"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"></path></svg>';
+            const svgCaretRight = '<svg viewBox="0 0 256 256" width="1em" height="1em" fill="currentColor"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path></svg>';
+
             let flechas = '';
             let dots = '';
             if (hayVarias) {
                 flechas = `
-                    <button class="carrusel-arrow carrusel-arrow-left" onclick="moverCarruselTarjeta(event, ${producto.id}, -1)" aria-label="Imagen anterior"><i class="ph ph-caret-left"></i></button>
-                    <button class="carrusel-arrow carrusel-arrow-right" onclick="moverCarruselTarjeta(event, ${producto.id}, 1)" aria-label="Siguiente imagen"><i class="ph ph-caret-right"></i></button>
+                    <button class="carrusel-arrow carrusel-arrow-left" onclick="moverCarruselTarjeta(event, ${producto.id}, -1)" aria-label="Imagen anterior">${svgCaretLeft}</button>
+                    <button class="carrusel-arrow carrusel-arrow-right" onclick="moverCarruselTarjeta(event, ${producto.id}, 1)" aria-label="Siguiente imagen">${svgCaretRight}</button>
                 `;
                 dots = `<div class="carrusel-dots">${imagenes.map((_, i) => `<button class="carrusel-dot${i === indiceActual ? ' activo' : ''}" onclick="irAImagenTarjeta(event, ${producto.id}, ${i})" aria-label="Imagen ${i + 1}"></button>`).join('')}</div>`;
             }
