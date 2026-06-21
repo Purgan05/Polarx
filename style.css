@@ -1582,7 +1582,7 @@ footer {
   .nav-buttons { gap:6px }
   .btn-icon-nav { width:38px!important; height:38px!important; min-width:38px; min-height:38px; max-width:38px; max-height:38px; font-size:1.25rem }
   .btn-inicio { width:36px!important; height:36px!important; min-width:36px; min-height:36px; max-width:36px; max-height:36px; font-size:1.2rem }
-  .buscador-container { max-width:160px; flex-grow:0 }
+  .buscador-container { max-width:min(220px, 45vw); flex-grow:1 }
   #input-busqueda { padding:8px 28px 8px 10px; font-size:0.82rem }
   .icono-lupa { font-size:1rem; right:10px }
 
