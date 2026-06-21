@@ -135,7 +135,7 @@
                 <!-- Tarjeta VAPES -->
                 <div class="landing-card" onclick="mostrarCatalogoCompleto()">
                     <div class="landing-card-image">
-                        <img src="img/vapes/portada_vapes.jpg" alt="Vapes y Plumas" loading="lazy" decoding="async">
+                        <img src="img/vapes/portada_vapes.webp" alt="Vapes y Plumas" loading="lazy" decoding="async">
                         <div class="landing-card-overlay"></div>
                     </div>
                     <div class="landing-card-content">
@@ -147,7 +147,7 @@
                 <!-- Tarjeta AUDÍFONOS -->
                 <div class="landing-card" onclick="mostrarCatalogoAudifonos()">
                     <div class="landing-card-image">
-                        <img src="img/audifonos/portada_audifonos.jpg" alt="Audífonos" loading="lazy" decoding="async">
+                        <img src="img/audifonos/airpods_pro_2.webp" alt="Audífonos" loading="lazy" decoding="async">
                         <div class="landing-card-overlay"></div>
                     </div>
                     <div class="landing-card-content">
@@ -159,7 +159,7 @@
                 <!-- Tarjeta PULSERAS -->
                 <div class="landing-card" onclick="mostrarCatalogoPulseras()">
                     <div class="landing-card-image">
-                        <img src="img/pulseras/portada_pulseras.jpg" alt="Pulseras" loading="lazy" decoding="async">
+                        <img src="img/pulseras/pulseras_portada.webp" alt="Pulseras" loading="lazy" decoding="async">
                         <div class="landing-card-overlay"></div>
                     </div>
                     <div class="landing-card-content">
@@ -177,7 +177,7 @@
             <!-- Bloque VAPES & PLUMAS -->
             <div class="promo-block">
                 <div class="promo-image">
-                    <img src="img/vapes/portada_vapes.jpg" alt="Vapes y Plumas" loading="lazy" decoding="async">
+                    <img src="img/vapes/portada_vapes.webp" alt="Vapes y Plumas" loading="lazy" decoding="async">
                 </div>
                 <div class="promo-content">
                     <h2>¡VAPES & PLUMAS!</h2>
@@ -193,7 +193,7 @@
             <!-- Bloque AUDÍFONOS -->
             <div class="promo-block promo-block-reverse">
                 <div class="promo-image">
-                    <img src="img/audifonos/portada_audifonos.jpg" alt="Audífonos" loading="lazy" decoding="async">
+                    <img src="img/audifonos/airpods_pro_2.webp" alt="Audífonos" loading="lazy" decoding="async">
                 </div>
                 <div class="promo-content">
                     <h2>¡AUDÍFONOS!</h2>
@@ -207,7 +207,7 @@
             <!-- Bloque PULSERAS -->
             <div class="promo-block">
                 <div class="promo-image">
-                    <img src="img/pulseras/portada_pulseras.jpg" alt="Pulseras" loading="lazy" decoding="async">
+                    <img src="img/pulseras/pulseras_portada.webp" alt="Pulseras" loading="lazy" decoding="async">
                 </div>
                 <div class="promo-content">
                     <h2>¡PULSERAS!</h2>
@@ -1078,36 +1078,49 @@
         };
 
         function renderizarMenuInicio() {
-            const cont = document.getElementById('contenedor-categorias-dinamico');
-            cont.innerHTML = '';
+    const cont = document.getElementById('contenedor-categorias-dinamico');
+    cont.innerHTML = '';
 
-            // Generar una tarjeta por cada sección visible/disponible, en orden
-            const secciones = CONFIG_SECCIONES
-                .filter(s => s.visible && s.disponible)
-                .sort((a, b) => a.orden - b.orden);
+    // Mostrar todas las secciones marcadas como visibles, sin importar
+    // si están "disponibles" para compra (eso se maneja aparte, con un badge
+    // y bloqueando el clic si aún no está disponible).
+    const secciones = CONFIG_SECCIONES
+        .filter(s => s.visible)
+        .sort((a, b) => a.orden - b.orden);
 
-            secciones.forEach((seccion, idx) => {
-                const etiqueta = ETIQUETAS_CATEGORIA[seccion.id];
-                if (!etiqueta) return;
+    secciones.forEach((seccion, idx) => {
+        const etiqueta = ETIQUETAS_CATEGORIA[seccion.id];
+        if (!etiqueta) return;
 
-                const card = document.createElement('div');
-                card.className = 'landing-card';
-                card.style.animationDelay = `${0.1 + idx * 0.1}s`;
-                card.onclick = etiqueta.accion;
+        const noDisponible = seccion.disponible === false;
 
-                card.innerHTML = `
-                    <div class="landing-card-image">
-                        <img src="${seccion.img}" alt="${etiqueta.alt}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/polarx_icono.webp'">
-                        <div class="landing-card-overlay"></div>
-                    </div>
-                    <div class="landing-card-content">
-                        <h3>¡${etiqueta.titulo}${etiqueta.etiqueta ? '<br>' + etiqueta.etiqueta : ''}!</h3>
-                        <span class="landing-card-arrow">→</span>
-                    </div>
-                `;
-                cont.appendChild(card);
-            });
-        }
+        const card = document.createElement('div');
+        card.className = 'landing-card' + (noDisponible ? ' landing-card-proximamente' : '');
+        card.style.animationDelay = `${0.1 + idx * 0.1}s`;
+
+        // Si no está disponible, bloquear el clic y mostrar aviso en vez de entrar al catálogo
+        card.onclick = noDisponible
+            ? () => mostrarAlertaModal(`¡${etiqueta.titulo}${etiqueta.etiqueta ? ' ' + etiqueta.etiqueta : ''}! estará disponible muy pronto. ¡Gracias por tu paciencia!`)
+            : etiqueta.accion;
+
+        const badgeProximamente = noDisponible
+            ? '<span class="badge-proximamente">PRÓXIMAMENTE</span>'
+            : '';
+
+        card.innerHTML = `
+            <div class="landing-card-image">
+                <img src="${seccion.img}" alt="${etiqueta.alt}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/polarx_icono.webp'">
+                <div class="landing-card-overlay"></div>
+                ${badgeProximamente}
+            </div>
+            <div class="landing-card-content">
+                <h3>¡${etiqueta.titulo}${etiqueta.etiqueta ? '<br>' + etiqueta.etiqueta : ''}!</h3>
+                <span class="landing-card-arrow">→</span>
+            </div>
+        `;
+        cont.appendChild(card);
+    });
+}
 
         // Función auxiliar para ordenar productos (agotados al final, luego por orden)
         function ordenarProductos(prods) {
