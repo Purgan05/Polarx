@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://unpkg.com">
     
     <!-- Preload recursos críticos para LCP -->
-    <link rel="preload" href="style.css?v=20260621b" as="style">
+    <link rel="preload" href="style.css?v=20260621c" as="style">
     <link rel="preload" href="img/iconos/polarx_logo..webp" as="image" type="image/webp">
     
     <!-- CSS crítico inline para primer render (evita FOUC) -->
@@ -39,7 +39,7 @@
     </style>
     
     <!-- Vinculación de Estilos -->
-    <link rel="stylesheet" href="style.css?v=20260621b">
+    <link rel="stylesheet" href="style.css?v=20260621c">
     
     <!-- Fuentes de Google con carga no bloqueante -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -262,7 +262,6 @@
                         <button class="carrusel-arrow carrusel-arrow-right" id="modal-carrusel-next" onclick="moverCarruselModal(1)" aria-label="Siguiente imagen">
                             <svg viewBox="0 0 256 256" width="1em" height="1em" fill="currentColor"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path></svg>
                         </button>
-                        <div class="carrusel-dots" id="modal-carrusel-dots"></div>
                     </div>
                     <div class="producto-info-base">
                         <h2 id="modal-titulo-producto">Nombre</h2>
@@ -388,10 +387,10 @@
          LÓGICA JAVASCRIPT
          ================================================================= -->
     <!-- Productos separados en archivos externos para fácil edición -->
-    <script src="vapes.js?v=20260621b"></script>
-    <script src="plumas.js?v=20260621b"></script>
-    <script src="audifonos.js?v=20260621b"></script>
-    <script src="pulseras.js?v=20260621b"></script>
+    <script src="vapes.js?v=20260621c"></script>
+    <script src="plumas.js?v=20260621c"></script>
+    <script src="audifonos.js?v=20260621c"></script>
+    <script src="pulseras.js?v=20260621c"></script>
     <script>
         // Combinar las listas de productos (vapes + plumas + audífonos + pulseras)
         if (typeof listaProductosPlumas !== 'undefined') {
@@ -1479,7 +1478,6 @@
 
         function renderCarruselModal() {
             const img = document.getElementById('modal-img');
-            const dots = document.getElementById('modal-carrusel-dots');
             const prevBtn = document.getElementById('modal-carrusel-prev');
             const nextBtn = document.getElementById('modal-carrusel-next');
             if (!img) return;
@@ -1490,19 +1488,6 @@
             const hayVarias = _modalCarruselImagenes.length > 1;
             if (prevBtn) prevBtn.classList.toggle('oculto', !hayVarias);
             if (nextBtn) nextBtn.classList.toggle('oculto', !hayVarias);
-
-            if (dots) {
-                dots.innerHTML = '';
-                if (hayVarias) {
-                    _modalCarruselImagenes.forEach((_, i) => {
-                        const dot = document.createElement('button');
-                        dot.className = 'carrusel-dot' + (i === _modalCarruselIndex ? ' activo' : '');
-                        dot.setAttribute('aria-label', `Imagen ${i + 1}`);
-                        dot.onclick = (e) => { e.stopPropagation(); _modalCarruselIndex = i; renderCarruselModal(); };
-                        dots.appendChild(dot);
-                    });
-                }
-            }
         }
 
         function moverCarruselModal(direccion) {

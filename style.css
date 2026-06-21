@@ -740,8 +740,7 @@ header {
 .carrusel-arrow.oculto { display:none }
 
 .carrusel-dots {
-  position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
-  display:flex; gap:5px; z-index:12;
+  display:none;
 }
 .carrusel-dot {
   width:6px; height:6px; border-radius:50%;
