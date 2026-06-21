@@ -595,11 +595,11 @@ header {
 }
 
 .img-wrapper {
-  height:350px; overflow:hidden; position:relative;
+  aspect-ratio:4/5; overflow:hidden; position:relative;
   border-bottom:1px solid rgba(0,0,0,0.15);
   background:linear-gradient(180deg,var(--az-50),var(--az-100));
 }
-.img-wrapper img { width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease; will-change:transform }
+.img-wrapper img { width:100%; height:100%; object-fit:cover; object-position:center center; transition:transform 0.6s ease; will-change:transform }
 .tarjeta-producto:hover .img-wrapper img { transform:scale(1.08) }
 
 .info-card {
@@ -757,8 +757,8 @@ header {
 .img-wrapper:hover .carrusel-arrow { opacity:0.6 }
 .img-wrapper .carrusel-arrow:hover { opacity:1 }
 .img-wrapper .carrusel-dots { bottom:6px }
-.img-wrapper .carrusel-dot { width:5px; height:5px }
-.img-wrapper .carrusel-dot.activo { width:10px; height:5px; border-radius:3px }
+.img-wrapper .carrusel-dot { width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.5) }
+.img-wrapper .carrusel-dot.activo { width:10px; height:5px; border-radius:3px; background:rgba(255,255,255,0.9) }
 
 /* En táctil (sin hover), mostrar las flechas tenues siempre para que se sepa que existen */
 @media (hover:none) {
@@ -1521,7 +1521,7 @@ footer {
   .landing-grid { margin-top:18px }
 
   .grid-productos { grid-template-columns:repeat(2,1fr); padding:10px; gap:12px }
-  .img-wrapper { height:180px }
+  .img-wrapper { aspect-ratio:1/1 }
   .img-wrapper img { object-position:center top }
 
   .footer-compra-sticky { padding:15px }
@@ -1574,7 +1574,7 @@ footer {
   nav { padding:12px 10px }
 
   .grid-productos { padding:8px; gap:10px }
-  .img-wrapper { height:160px }
+  .img-wrapper { aspect-ratio:1/1 }
   .img-wrapper .carrusel-arrow { width:22px; height:34px; font-size:0.8rem }
   .carrusel-arrow { width:34px; height:50px; font-size:1.05rem }
 
@@ -1620,7 +1620,7 @@ footer {
   .landing-card-content h3 { font-size:0.75rem }
 
   .grid-productos { padding:8px; gap:8px }
-  .img-wrapper { height:180px }
+  .img-wrapper { aspect-ratio:1/1 }
   .tarjeta-producto { border-radius:14px }
   .info-card { padding:10px; height:auto }
   .info-card h3 { font-size:0.85rem }
@@ -1702,7 +1702,7 @@ footer {
   .icono-lupa { font-size:1rem; right:7px }
 
   .grid-productos { padding:8px; gap:12px }
-  .img-wrapper { height:160px }
+  .img-wrapper { aspect-ratio:1/1 }
   .tarjeta-producto { border-radius:12px }
   .info-card { padding:8px }
   .info-card h3 { font-size:0.98rem }
@@ -1792,7 +1792,7 @@ footer {
   .icono-lupa { font-size:0.9rem; right:6px }
 
   .grid-productos { padding:6px; gap:6px }
-  .img-wrapper { height:140px }
+  .img-wrapper { aspect-ratio:5/4 }
   .tarjeta-producto { border-radius:10px }
   .info-card { padding:6px }
   .info-card h3 { font-size:0.75rem }
