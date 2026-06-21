@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://unpkg.com">
     
     <!-- Preload recursos críticos para LCP -->
-    <link rel="preload" href="style.css?v=20260621" as="style">
+    <link rel="preload" href="style.css?v=20260621b" as="style">
     <link rel="preload" href="img/iconos/polarx_logo..webp" as="image" type="image/webp">
     
     <!-- CSS crítico inline para primer render (evita FOUC) -->
@@ -39,7 +39,7 @@
     </style>
     
     <!-- Vinculación de Estilos -->
-    <link rel="stylesheet" href="style.css?v=20260621">
+    <link rel="stylesheet" href="style.css?v=20260621b">
     
     <!-- Fuentes de Google con carga no bloqueante -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -388,10 +388,10 @@
          LÓGICA JAVASCRIPT
          ================================================================= -->
     <!-- Productos separados en archivos externos para fácil edición -->
-    <script src="vapes.js?v=20260621"></script>
-    <script src="plumas.js?v=20260621"></script>
-    <script src="audifonos.js?v=20260621"></script>
-    <script src="pulseras.js?v=20260621"></script>
+    <script src="vapes.js?v=20260621b"></script>
+    <script src="plumas.js?v=20260621b"></script>
+    <script src="audifonos.js?v=20260621b"></script>
+    <script src="pulseras.js?v=20260621b"></script>
     <script>
         // Combinar las listas de productos (vapes + plumas + audífonos + pulseras)
         if (typeof listaProductosPlumas !== 'undefined') {
@@ -1565,16 +1565,14 @@
             const svgCaretRight = '<svg viewBox="0 0 256 256" width="1em" height="1em" fill="currentColor"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path></svg>';
 
             let flechas = '';
-            let dots = '';
             if (hayVarias) {
                 flechas = `
                     <button class="carrusel-arrow carrusel-arrow-left" onclick="moverCarruselTarjeta(event, ${producto.id}, -1)" aria-label="Imagen anterior">${svgCaretLeft}</button>
                     <button class="carrusel-arrow carrusel-arrow-right" onclick="moverCarruselTarjeta(event, ${producto.id}, 1)" aria-label="Siguiente imagen">${svgCaretRight}</button>
                 `;
-                dots = `<div class="carrusel-dots">${imagenes.map((_, i) => `<button class="carrusel-dot${i === indiceActual ? ' activo' : ''}" onclick="irAImagenTarjeta(event, ${producto.id}, ${i})" aria-label="Imagen ${i + 1}"></button>`).join('')}</div>`;
             }
 
-            return `<div class="img-wrapper" data-carrusel-id="${producto.id}"><img src="${imagenes[indiceActual]}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/polarx_icono.webp'">${flechas}${dots}</div>`;
+            return `<div class="img-wrapper" data-carrusel-id="${producto.id}"><img src="${imagenes[indiceActual]}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/iconos/polarx_icono.webp'">${flechas}</div>`;
         }
 
         // --- MODAL ---

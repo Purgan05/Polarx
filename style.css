@@ -756,9 +756,7 @@ header {
 }
 .img-wrapper:hover .carrusel-arrow { opacity:0.6 }
 .img-wrapper .carrusel-arrow:hover { opacity:1 }
-.img-wrapper .carrusel-dots { bottom:6px }
-.img-wrapper .carrusel-dot { width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.5) }
-.img-wrapper .carrusel-dot.activo { width:10px; height:5px; border-radius:3px; background:rgba(255,255,255,0.9) }
+.img-wrapper .carrusel-dots { display:none }
 
 /* En táctil (sin hover), mostrar las flechas tenues siempre para que se sepa que existen */
 @media (hover:none) {
