@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -175,7 +174,7 @@
              ========================================= -->
         <div class="promo-section">
             <!-- Bloque VAPES & PLUMAS -->
-            <div class="promo-block">
+            <div class="promo-block" data-categoria-promo="vapes">
                 <div class="promo-image">
                     <img src="img/vapes/portada_vapes.webp" alt="Vapes y Plumas" loading="lazy" decoding="async">
                 </div>
@@ -186,12 +185,12 @@
                     <p>Precios accesibles, entregas en Acayucan y alrededores.</p>
                     <p>Calidad garantizada en cada producto.</p>
                     <p class="promo-highlight">"Los mejores precios, entregas seguras en tu zona"</p>
-                    <button class="promo-btn" onclick="mostrarCatalogoCompleto()">VER CATÁLOGO</button>
+                    <button class="promo-btn" data-categoria-btn="vapes" onclick="mostrarCatalogoCompleto()">VER CATÁLOGO</button>
                 </div>
             </div>
 
             <!-- Bloque AUDÍFONOS -->
-            <div class="promo-block promo-block-reverse">
+            <div class="promo-block promo-block-reverse" data-categoria-promo="audifonos">
                 <div class="promo-image">
                     <img src="img/audifonos/airpods_pro_2.webp" alt="Audífonos" loading="lazy" decoding="async">
                 </div>
@@ -200,12 +199,12 @@
                     <h3>Sonido de calidad al mejor precio</h3>
                     <p>Las mejores marcas de audífonos, ideales para uso personal o para regalo.</p>
                     <p>Disponibles en Acayucan y alrededores.</p>
-                    <button class="promo-btn" onclick="mostrarCatalogoAudifonos()">AUDÍFONOS</button>
+                    <button class="promo-btn" data-categoria-btn="audifonos" onclick="mostrarCatalogoAudifonos()">AUDÍFONOS</button>
                 </div>
             </div>
 
             <!-- Bloque PULSERAS -->
-            <div class="promo-block">
+            <div class="promo-block" data-categoria-promo="pulseras">
                 <div class="promo-image">
                     <img src="img/pulseras/pulseras_portada.webp" alt="Pulseras" loading="lazy" decoding="async">
                 </div>
@@ -214,7 +213,7 @@
                     <h3>Variedad de estilos</h3>
                     <p>Pulseras de moda con diseños variados, perfectas para cualquier ocasión.</p>
                     <p>Calidad y los mejores precios en Acayucan.</p>
-                    <button class="promo-btn" onclick="mostrarCatalogoPulseras()">PULSERAS</button>
+                    <button class="promo-btn" data-categoria-btn="pulseras" onclick="mostrarCatalogoPulseras()">PULSERAS</button>
                 </div>
             </div>
         </div>
@@ -1120,7 +1119,39 @@
         `;
         cont.appendChild(card);
     });
+
+    // También sincronizar los bloques/botones de la sección promocional,
+    // así sin importar cuál camino tome el usuario (tarjeta o sección
+    // promocional), el estado visual es siempre coherente con
+    // CONFIG_SECCIONES.
+    actualizarBloquesPromo();
 }
+
+        // Atenúa visualmente los bloques promocionales y deshabilita sus botones
+        // cuando la categoría correspondiente no es visible o no está disponible.
+        // La validación real (lo que de verdad bloquea la entrada) vive en
+        // cargarCatalogo(); esto es solo el reflejo visual de ese mismo estado.
+        function actualizarBloquesPromo() {
+            CONFIG_SECCIONES.forEach(seccion => {
+                const bloqueado = (seccion.visible === false) || (seccion.disponible === false);
+
+                const bloque = document.querySelector(`[data-categoria-promo="${seccion.id}"]`);
+                if (bloque) {
+                    bloque.classList.toggle('promo-block-bloqueado', bloqueado);
+                    if (seccion.visible === false) {
+                        bloque.style.display = 'none';
+                    } else {
+                        bloque.style.display = '';
+                    }
+                }
+
+                const boton = document.querySelector(`[data-categoria-btn="${seccion.id}"]`);
+                if (boton) {
+                    boton.disabled = bloqueado;
+                    boton.classList.toggle('promo-btn-bloqueado', bloqueado);
+                }
+            });
+        }
 
         // Función auxiliar para ordenar productos (agotados al final, luego por orden)
         function ordenarProductos(prods) {
@@ -1132,6 +1163,29 @@
         }
 
         function cargarCatalogo(filtro) {
+            // GUARDIA DE ACCESO: sin importar desde dónde se llame esta función
+            // (tarjeta de inicio, botón de la sección promocional, búsqueda, o
+            // cualquier otro lugar futuro), si la sección no es visible o no
+            // está disponible para compra, se bloquea aquí mismo. Esta es la
+            // única puerta de entrada real al catálogo de una categoría, así
+            // que blindarla aquí cierra todas las rutas de entrada a la vez.
+            const seccionConfig = CONFIG_SECCIONES.find(s => s.id === filtro);
+            if (seccionConfig) {
+                if (seccionConfig.visible === false) {
+                    // Sección oculta por completo: no debe poder entrarse de ninguna forma.
+                    mostrarAlertaModal('Esta sección no está disponible en este momento.');
+                    return;
+                }
+                if (seccionConfig.disponible === false) {
+                    const etiqueta = ETIQUETAS_CATEGORIA[seccionConfig.id];
+                    const nombreMostrar = etiqueta
+                        ? `¡${etiqueta.titulo}${etiqueta.etiqueta ? ' ' + etiqueta.etiqueta : ''}!`
+                        : seccionConfig.titulo;
+                    mostrarAlertaModal(`${nombreMostrar} estará disponible muy pronto. ¡Gracias por tu paciencia!`);
+                    return;
+                }
+            }
+
             document.getElementById('seccion-categorias').style.display = 'none';
             document.getElementById('seccion-grid').style.display = 'block';
             

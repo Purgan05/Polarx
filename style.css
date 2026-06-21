@@ -416,6 +416,17 @@ nav,nav * { user-select:none }
   text-transform: uppercase;
 }
 
+/* Bloque promocional cuando la categoría no está visible o no disponible */
+.promo-block-bloqueado { filter: grayscale(45%); opacity: 0.7 }
+.promo-btn-bloqueado,
+.promo-btn-bloqueado:hover {
+  cursor: not-allowed !important;
+  opacity: 0.55;
+  background: var(--az-200) !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--az-200) !important;
+}
+
 /* ==========================================================================
    7. CATEGORÍAS (LEGACY)
    ========================================================================== */
