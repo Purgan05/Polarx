@@ -29,7 +29,7 @@ const listaProductosPlumas = [
         id: 404, nombre: 'Packman x Partyboyz', precio: 1390,
         descripcion: 'Pluma de 3g + Pre roll',
         imagenes: ['img/plumas/packmanxpartyboyz_f1.webp', 'img/plumas/packmanxpartyboyz_f2.webp'],
-        categoria: 'plumas', activo: true, agotado: false, orden: 4
+        categoria: 'plumas', activo: true, agotado: true, orden: 4
     },
     {
         id: 405, nombre: 'Pluma 5', precio: 0,

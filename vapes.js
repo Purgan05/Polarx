@@ -27,7 +27,7 @@ let listaProductos = [
         { nombre: "Blackcurrant Mixed Berries", disponible: true },
         
     ] },
-    { id: 7, categoria: 'vapes', activo: true, orden: 7, agotado: false, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_cb_f1.webp"], sabores: [
+    { id: 7, categoria: 'vapes', activo: true, orden: 7, agotado: true, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_cb_f1.webp"], sabores: [
         { nombre: "Cherry Berry", disponible: true },
        
     ] },
