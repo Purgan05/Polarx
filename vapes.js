@@ -55,7 +55,7 @@ let listaProductos = [
         { nombre: "Triple Berries", disponible: true },
 
     ] },
-    { id: 14, categoria: 'vapes', activo: true, orden: 14, agotado: false, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_wc_f1.webp"], sabores: [
+    { id: 14, categoria: 'vapes', activo: true, orden: 14, agotado: true, nombre: "Lost Vape 7.5k", modelo: "7,500 Puffs", precio: 220, imagenes: ["img/vapes/lostvape_wc_f1.webp"], sabores: [
         { nombre: "Watermelon Cream", disponible: true },
         
     ] },

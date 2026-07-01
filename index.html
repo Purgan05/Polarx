@@ -332,10 +332,15 @@
         </div>
     </div>
 
-    <!-- Floating WhatsApp Button -->
-    <button id="whatsapp-floating" class="btn-whatsapp" onclick="toggleFloatingCart()" aria-label="Abrir carrito">
-        <i class="ph ph-whatsapp-logo"></i>
+    <!-- Floating Cart Button (carrito portátil) -->
+    <button id="cart-floating" class="btn-whatsapp btn-cart-floating" onclick="toggleFloatingCart()" aria-label="Abrir carrito">
+        <i class="ph ph-shopping-cart"></i>
         <span id="whatsapp-badge" class="whatsapp-badge">0</span>
+    </button>
+
+    <!-- Floating WhatsApp Button (chat directo, sin mensaje) -->
+    <button id="whatsapp-floating" class="btn-whatsapp" onclick="abrirChatWhatsapp()" aria-label="Chatear por WhatsApp">
+        <i class="ph ph-whatsapp-logo"></i>
     </button>
 
     <!-- Floating cart panel -->
@@ -2043,9 +2048,15 @@
             panel.setAttribute('aria-hidden','true');
             // esperar la animación y ocultar
             setTimeout(() => { panel.style.display = 'none'; }, 220);
-            // devolver foco al botón whatsapp
-            const btn = document.getElementById('whatsapp-floating');
+            // devolver foco al botón del carrito
+            const btn = document.getElementById('cart-floating');
             if (btn) btn.focus();
+        }
+
+        // Abre un chat directo de WhatsApp con tu número, sin mensaje predefinido
+        function abrirChatWhatsapp() {
+            const telefono = '5219241781748';
+            window.open(`https://wa.me/${telefono}`, '_blank');
         }
 
         // Flujo principal: capturar correo y luego enviar pedido completo por WhatsApp

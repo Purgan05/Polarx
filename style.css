@@ -1103,6 +1103,16 @@ header {
 .btn-whatsapp:active { transform:translateY(0) scale(0.98) }
 .btn-whatsapp i { font-size:1.8rem; color:#fff }
 
+/* Botón de carrito flotante — mismo diseño que btn-whatsapp, apilado arriba */
+.btn-cart-floating {
+  bottom: 94px;
+  background:linear-gradient(135deg,var(--az-400),var(--az-600),var(--az-800));
+  box-shadow:0 8px 32px rgba(0,0,0,0.35), 0 4px 16px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.15);
+  animation:none;
+}
+.btn-cart-floating:hover { transform:translateY(-4px) scale(1.08) }
+.btn-cart-floating:active { transform:translateY(0) scale(0.98) }
+
 .whatsapp-badge {
   position:absolute; top:-4px; right:-4px;
   background:var(--rojo-dark); color:#fff; min-width:20px; height:20px;
@@ -1119,7 +1129,7 @@ header {
 
 /* ── Floating Cart Panel ── */
 .floating-cart-panel {
-  position:fixed; right:18px; bottom:100px;
+  position:fixed; right:18px; bottom:176px;
   width:min(360px,calc(100vw - 36px));
   max-height:calc(100vh - 160px);
   background:rgba(255,255,255,0.78);
@@ -1592,10 +1602,11 @@ footer {
   .subtitulo-vip { font-size:1.4rem; letter-spacing:5px }
   .slogan { font-size:0.8rem; letter-spacing:4px }
 
-  .floating-cart-panel { right:10px; left:10px; bottom:88px; max-height:68vh }
+  .floating-cart-panel { right:10px; left:10px; bottom:170px; max-height:68vh }
   .floating-cart-list { max-height:180px }
   .btn-whatsapp { width:62px; height:62px }
   .btn-whatsapp i { font-size:1.7rem }
+  .btn-cart-floating { bottom:92px }
   .footer-compra-sticky { padding:14px 16px }
   .total-final #total-precio { font-size:1.5rem }
   .boton-pedir { padding:11px 20px; font-size:0.9rem }
@@ -1639,8 +1650,9 @@ footer {
 
   .btn-whatsapp { width:58px; height:58px; right:14px; bottom:14px }
   .btn-whatsapp i { font-size:1.5rem }
+  .btn-cart-floating { bottom:84px; right:14px }
 
-  .floating-cart-panel { right:8px; left:8px; bottom:82px; max-height:62vh }
+  .floating-cart-panel { right:8px; left:8px; bottom:156px; max-height:62vh }
   .floating-cart-list { max-height:140px }
   .floating-cart-footer { padding:12px 10px }
   .floating-total { font-size:1rem; margin-bottom:8px }
@@ -1732,7 +1744,9 @@ footer {
 
   .btn-whatsapp { width:54px; height:54px; right:12px; bottom:12px }
   .btn-whatsapp i { font-size:1.4rem }
-  .floating-cart-panel { right:6px; left:6px; bottom:78px; max-height:58vh }
+  .btn-cart-floating { bottom:78px; right:12px }
+
+  .floating-cart-panel { right:6px; left:6px; bottom:146px; max-height:58vh }
   .floating-cart-list { max-height:120px }
   .floating-cart-item { padding:8px; gap:8px }
   .floating-cart-item img { width:40px; height:40px }
@@ -1811,7 +1825,9 @@ footer {
 
   .btn-whatsapp { width:50px; height:50px; right:10px; bottom:10px }
   .btn-whatsapp i { font-size:1.3rem }
-  .floating-cart-panel { right:4px; left:4px; bottom:72px; max-height:55vh }
+  .btn-cart-floating { bottom:72px; right:10px }
+
+  .floating-cart-panel { right:4px; left:4px; bottom:136px; max-height:55vh }
   .floating-cart-list { max-height:100px }
 
   .carrito-card-info { padding:6px 4px!important; gap:2px }
@@ -1844,5 +1860,6 @@ footer {
 @supports (padding:env(safe-area-inset-bottom)) {
   body { padding-bottom:env(safe-area-inset-bottom) }
   .btn-whatsapp { bottom:calc(18px + env(safe-area-inset-bottom)) }
-  .floating-cart-panel { bottom:calc(90px + env(safe-area-inset-bottom)) }
+  .btn-cart-floating { bottom:calc(94px + env(safe-area-inset-bottom)) }
+  .floating-cart-panel { bottom:calc(176px + env(safe-area-inset-bottom)) }
 }
